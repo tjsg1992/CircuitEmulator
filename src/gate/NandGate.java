@@ -10,9 +10,11 @@ public class NandGate extends Gate {
 	
 	private Transistor[] transistors;
 	private Junction gateJunction;
+	private Source mySource;
 
 	public NandGate(Connection[] theInputConnections) {
 		super(theInputConnections);
+		mySource = new Source();
 		setupGate();
 		update();
 	}
@@ -21,7 +23,7 @@ public class NandGate extends Gate {
 		transistors = new Transistor[myInputConnections.length];
 		
 		for(int i = 0; i < myInputConnections.length; i++) {
-			transistors[i] = new PTypeTransistor(new Source(), myInputConnections[i]);
+			transistors[i] = new PTypeTransistor(mySource, myInputConnections[i]);
 		}
 		
 		Connection[] junctions = new Connection[transistors.length];
