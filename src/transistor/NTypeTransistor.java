@@ -15,12 +15,15 @@ public class NTypeTransistor extends Transistor {
 	/**
 	 * 
 	 */
-	public NTypeTransistor(Connection theInputConnection) {
-		super(theInputConnection);
+	public NTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
+		super(thePowerConnection, theInputConnection);
+		myInputConnection.addOutputTransistor(this);
 	}
 	
 	@Override
 	public void update() {
+		if(!hasPower()) myOutputConnection.powerOff();
+		
 		if(myInputConnection.hasPower()) {
 			myOutputConnection.powerOn();
 		} else {

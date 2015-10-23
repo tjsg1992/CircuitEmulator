@@ -12,12 +12,14 @@ package transistor;
  */
 public class PTypeTransistor extends Transistor {
 	
-	public PTypeTransistor(Connection theInputConnection) {
-		super(theInputConnection);
+	public PTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
+		super(thePowerConnection, theInputConnection);
+		myInputConnection.addOutputTransistor(this);
 	}
 	
 	@Override
 	public void update() {
+		if(!hasPower()) myOutputConnection.powerOff();
 		if(!myInputConnection.hasPower()) {
 			myOutputConnection.powerOn();
 		} else {

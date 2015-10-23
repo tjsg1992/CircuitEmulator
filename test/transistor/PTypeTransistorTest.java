@@ -7,15 +7,15 @@ import org.junit.Test;
 
 public class PTypeTransistorTest {
 	
-	protected Connection myInputConnection;
-	protected PTypeTransistor myTestTransistor;
+	private Connection myInputConnection;
+	private PTypeTransistor myTestTransistor;
 
 	@Before
 	public void setUp() throws Exception {
 		myInputConnection = new Connection();
 		myInputConnection.powerOn();
 		
-		myTestTransistor = new PTypeTransistor(myInputConnection);
+		myTestTransistor = new PTypeTransistor(new Source(), myInputConnection);
 		myInputConnection.addOutputTransistor(myTestTransistor);
 	}
 

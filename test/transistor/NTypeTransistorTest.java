@@ -15,7 +15,7 @@ public class NTypeTransistorTest {
 		myInputConnection = new Connection();
 		myInputConnection.powerOn();
 		
-		myTestTransistor = new NTypeTransistor(myInputConnection);
+		myTestTransistor = new NTypeTransistor(new Source(), myInputConnection);
 		myInputConnection.addOutputTransistor(myTestTransistor);
 	}
 

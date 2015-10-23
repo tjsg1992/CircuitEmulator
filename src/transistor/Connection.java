@@ -13,10 +13,17 @@ import java.util.ArrayList;
 public class Connection {
 	private boolean power;
 	private ArrayList<Transistor> myOutputTransistors;
+	private ArrayList<Junction> myJunctions;
 	
 	public Connection() {
 		power = false;
 		myOutputTransistors = new ArrayList<Transistor>();
+		myJunctions = new ArrayList<Junction>();
+	}
+	
+	public void addJunction(Junction theJunction) {
+		this.myJunctions.add(theJunction);
+		updateOutputs();
 	}
 	
 	public void addOutputTransistor(Transistor theOutputTransistor) {
@@ -42,11 +49,20 @@ public class Connection {
 		return power;
 	}
 	
+	
+	
 	private void updateOutputs() {
-		if(myOutputTransistors.size() == 0) return;
 		
-		for(Transistor t : myOutputTransistors) {
-			t.update();
+		if(myJunctions.size() != 0) {
+			for(Junction j : myJunctions) {
+				j.update();
+			}
+		}
+		
+		if(myOutputTransistors.size() != 0) {
+			for(Transistor t : myOutputTransistors) {
+				t.update();
+			}
 		}
 	}
 }
