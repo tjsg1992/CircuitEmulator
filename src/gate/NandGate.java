@@ -8,9 +8,8 @@ import transistor.Transistor;
 
 public class NandGate extends Gate {
 	
-	private Transistor myTransistorA;
-	private Transistor myTransistorB;
-	private Junction junctionAandB;
+	private Transistor[] transistors;
+	private Junction gateJunction;
 
 	public NandGate(Connection[] theInputConnections) {
 		super(theInputConnections);
@@ -19,23 +18,31 @@ public class NandGate extends Gate {
 	}
 	
 	private void setupGate() {
-		myTransistorA = new PTypeTransistor(new Source(), myInputConnections[0]);
-		myTransistorB = new PTypeTransistor(new Source(), myInputConnections[1]);
+		transistors = new Transistor[myInputConnections.length];
 		
-		Connection[] junctions = new Connection[2];
-		junctions[0] = myTransistorA.getOutput();
-		junctions[1] = myTransistorB.getOutput();
-		junctionAandB = new Junction(junctions);
+		for(int i = 0; i < myInputConnections.length; i++) {
+			transistors[i] = new PTypeTransistor(new Source(), myInputConnections[i]);
+		}
 		
-		myTransistorA.getOutput().addJunction(junctionAandB);
-		myTransistorB.getOutput().addJunction(junctionAandB);
+		Connection[] junctions = new Connection[transistors.length];
 		
-		super.myOutputConnection = junctionAandB.getOutput();
+		for(int i = 0; i < transistors.length; i++) {
+			junctions[i] = transistors[i].getOutput();
+		}
+
+		gateJunction = new Junction(junctions);
+		
+		for(int i = 0; i < transistors.length; i ++) {
+			transistors[i].getOutput().addJunction(gateJunction);
+		}
+		
+		super.myOutputConnection = gateJunction.getOutput();
 	}
 	
 	public void update() {
-		myTransistorA.update();
-		myTransistorB.update();
+		for(Transistor t : transistors) {
+			t.update();
+		}
 	}
 
 }

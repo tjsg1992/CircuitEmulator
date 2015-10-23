@@ -7,8 +7,7 @@ import transistor.Transistor;
 
 public class NorGate extends Gate {
 	
-	private Transistor myTransistorA;
-	private Transistor myTransistorB;
+	private Transistor[] myTransistors;
 
 	public NorGate(Connection[] theInputConnections) {
 		super(theInputConnections);
@@ -17,16 +16,21 @@ public class NorGate extends Gate {
 	}
 	
 	private void setupGate() {
-		myTransistorA = new PTypeTransistor(new Source(), myInputConnections[0]);
-		myTransistorB = new PTypeTransistor(myTransistorA.getOutput(), myInputConnections[1]);
+		myTransistors = new Transistor[myInputConnections.length];
+		myTransistors[0] = new PTypeTransistor(new Source(), myInputConnections[0]);
 		
-		super.myOutputConnection = myTransistorB.getOutput();
+		for(int i = 1; i < myTransistors.length; i++) {
+			myTransistors[i] = new PTypeTransistor(myTransistors[i - 1].getOutput(), myInputConnections[i]);
+		}
+
+		super.myOutputConnection = myTransistors[myTransistors.length - 1].getOutput();
 	}
 
 	@Override
 	public void update() {
-		myTransistorA.update();
-		myTransistorB.update();
+		for(Transistor t : myTransistors) {
+			t.update();
+		}
 	}
 
 }
