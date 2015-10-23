@@ -18,6 +18,7 @@ public class NTypeTransistor extends Transistor {
 	public NTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
 		myInputConnection.addOutputTransistor(this);
+		myPowerConnection.addOutputTransistor(this);
 	}
 	
 	@Override

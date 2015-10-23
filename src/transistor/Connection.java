@@ -41,6 +41,7 @@ public class Connection {
 	public void powerOff() {
 		if(!power) return;
 		
+	
 		power = false;
 		updateOutputs();
 	}
