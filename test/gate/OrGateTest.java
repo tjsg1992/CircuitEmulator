@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import transistor.Connection;
 
-public class NorGateTest {	
+public class OrGateTest {
 	private Connection myInputConnectionA;
 	private Connection myInputConnectionB;
 	private Connection[] myInputs;
-	private NorGate myTestGate;
+	private OrGate myTestGate;
 
 	@Before
 	public void setUp() throws Exception {
@@ -22,31 +22,32 @@ public class NorGateTest {
 		myInputs[0] = myInputConnectionA;
 		myInputs[1] = myInputConnectionB;
 		 
-		myTestGate = new NorGate(myInputs);
+		myTestGate = new OrGate(myInputs);
 	}
 
 	@Test
 	public void bothOutputsOnTest() {
 		myInputConnectionA.powerOn();
 		myInputConnectionB.powerOn();
-		assertFalse(myTestGate.getOutput().hasPower());
+		assertTrue(myTestGate.getOutput().hasPower());
 	}
 	
 	@Test
 	public void bothOutputsOffTest() {
 		myInputConnectionA.powerOff();
 		myInputConnectionB.powerOff();
-		assertTrue(myTestGate.getOutput().hasPower());
+		assertFalse(myTestGate.getOutput().hasPower());
 	}
 	
 	@Test
 	public void oneOutputOnTest() {
 		myInputConnectionA.powerOn();
 		myInputConnectionB.powerOff();
-		assertFalse(myTestGate.getOutput().hasPower());
+		assertTrue(myTestGate.getOutput().hasPower());
 		
 		myInputConnectionA.powerOff();
 		myInputConnectionB.powerOn();
-		assertFalse(myTestGate.getOutput().hasPower());
+		assertTrue(myTestGate.getOutput().hasPower());
 	}
+
 }
