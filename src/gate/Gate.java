@@ -30,14 +30,6 @@ public abstract class Gate {
 		return myInputConnections;
 	}
 	
-	protected Connection getOutputConnection() {
-		return myOutputConnection;
-	}
-	
-	protected void setInputConnections(Connection[] theInputConnections) {
-		this.myInputConnections = theInputConnections;
-	}
-	
 	protected void setOutputConnection(Connection theOutputConnection) {
 		this.myOutputConnection = theOutputConnection;
 	}
