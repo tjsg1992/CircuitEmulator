@@ -7,12 +7,12 @@ import org.junit.Test;
 
 import transistor.Connection;
 
-public class MultiplexerTest {
+public class DecoderTest {
 	private Connection connectionA;
 	private Connection connectionB;
 	private Connection[] myInputConnections;
 	
-	private Multiplexer myMultiplexer;
+	private Decoder myDecoder;
 	private Connection[] myOutputConnections;
 
 	@Before
@@ -24,8 +24,8 @@ public class MultiplexerTest {
 		myInputConnections[0] = connectionA;
 		myInputConnections[1] = connectionB;
 		
-		myMultiplexer = new Multiplexer(myInputConnections);
-		myOutputConnections = myMultiplexer.getOutputConnections();
+		myDecoder = new Decoder(myInputConnections);
+		myOutputConnections = myDecoder.getOutputConnections();
 	}
 
 	@Test
