@@ -18,19 +18,19 @@ public class NTypeTransistor extends Transistor {
 	 */
 	public NTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
-		myInputConnection.addOutputTransistor(this);
-		myPowerConnection.addOutputTransistor(this);
+		super.getInputConnection().addOutputTransistor(this);
+		super.getPowerConnection().addOutputTransistor(this);
 	}
 	
 	@Override
 	public void update() {
 		//No matter the input, the output is off if the Transistor is not powered.
-		if(!hasPower()) myOutputConnection.powerOff();
+		if(!hasPower()) super.getOutputConnection().powerOff();
 		
-		if(myInputConnection.hasPower()) {
-			myOutputConnection.powerOn();
+		if(super.getInputConnection().hasPower()) {
+			super.getOutputConnection().powerOn();
 		} else {
-			myOutputConnection.powerOff();
+			super.getOutputConnection().powerOff();
 		}
 	}
 	

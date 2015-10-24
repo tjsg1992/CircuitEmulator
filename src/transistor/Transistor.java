@@ -13,9 +13,9 @@ package transistor;
  */
 public abstract class Transistor {
 	
-	protected Connection myPowerConnection;
-	protected Connection myInputConnection;	
-	protected Connection myOutputConnection;
+	private Connection myPowerConnection;
+	private Connection myInputConnection;	
+	private Connection myOutputConnection;
 	
 	/**
 	 * Construct a Transistor that is linked to power, input, and
@@ -50,5 +50,17 @@ public abstract class Transistor {
 	 * Update the transistor, which updates its outputs.
 	 */
 	public abstract void update();
+
+	protected Connection getPowerConnection() {
+		return myPowerConnection;
+	}
+
+	protected Connection getInputConnection() {
+		return myInputConnection;
+	}
+
+	protected Connection getOutputConnection() {
+		return myOutputConnection;
+	}
 	
 }
