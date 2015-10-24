@@ -56,33 +56,33 @@ public abstract class Transistor {
 	
 	
 	/**
-	 * Update the transistor, which updates its outputs.
+	 * Refresh the transistor, which may update its outputs.
 	 */
 	public abstract void update();
 	
 	
-	/*
+	/**
 	 * Powers on the Transistor's output connection.
 	 */
 	protected void powerOnOutput() {
 		myOutputConnection.powerOn();
 	}
 	
-	/*
+	/**
 	 * Powers off the Transistor's output connection.
 	 */
 	protected void powerOffOutput() {
 		myOutputConnection.powerOff();
 	}
 	
-	/*
+	/**
 	 * Adds itself to the input connection's list of output transistors.
 	 */
 	protected void connectSelfToInput() {
 		myInputConnection.addOutputTransistor(this);
 	}
 	
-	/*
+	/**
 	 * Adds itself to the power connection's list of output transistors.
 	 */
 	protected void connectSelfToPower() {
