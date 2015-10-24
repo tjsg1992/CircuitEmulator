@@ -47,20 +47,46 @@ public abstract class Transistor {
 	}
 	
 	/**
+	 * Return whether or not the Transistor's input is powered.
+	 * @return true if the input is powered on; false otherwise
+	 */
+	public boolean inputHasPower() {
+		return myInputConnection.hasPower();
+	}
+	
+	
+	/**
 	 * Update the transistor, which updates its outputs.
 	 */
 	public abstract void update();
-
-	protected Connection getPowerConnection() {
-		return myPowerConnection;
+	
+	
+	/*
+	 * Powers on the Transistor's output connection.
+	 */
+	protected void powerOnOutput() {
+		myOutputConnection.powerOn();
 	}
-
-	protected Connection getInputConnection() {
-		return myInputConnection;
+	
+	/*
+	 * Powers off the Transistor's output connection.
+	 */
+	protected void powerOffOutput() {
+		myOutputConnection.powerOff();
 	}
-
-	protected Connection getOutputConnection() {
-		return myOutputConnection;
+	
+	/*
+	 * Adds itself to the input connection's list of output transistors.
+	 */
+	protected void connectSelfToInput() {
+		myInputConnection.addOutputTransistor(this);
+	}
+	
+	/*
+	 * Adds itself to the power connection's list of output transistors.
+	 */
+	protected void connectSelfToPower() {
+		myPowerConnection.addOutputTransistor(this);
 	}
 	
 }

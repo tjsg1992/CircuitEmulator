@@ -15,22 +15,22 @@ public class PTypeTransistor extends Transistor {
 	
 	public PTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
-		super.getInputConnection().addOutputTransistor(this);
-		super.getPowerConnection().addOutputTransistor(this);
+		super.connectSelfToInput();
+		super.connectSelfToPower();
 	}
 	
 	@Override
 	public void update() {
 		
 		if(!hasPower()) {
-			super.getOutputConnection().powerOff();
+			super.powerOffOutput();
 			return;
 		}
 
-		if(!super.getInputConnection().hasPower()) {
-			super.getOutputConnection().powerOn();
+		if(!super.inputHasPower()) {
+			super.powerOnOutput();
 		} else {
-			super.getOutputConnection().powerOff();
+			super.powerOffOutput();
 		}
 		
 	}
