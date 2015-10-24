@@ -23,7 +23,7 @@ public abstract class Transistor {
 	 * @param thePowerConnection The connection that provides power
 	 * @param theInputConnection The input connection that the Transistor works on.
 	 */
-	public Transistor(Connection thePowerConnection, Connection theInputConnection) {
+	protected Transistor(Connection thePowerConnection, Connection theInputConnection) {
 		this.myPowerConnection = thePowerConnection;
 		this.myInputConnection = theInputConnection;
 		this.myOutputConnection = new Connection();

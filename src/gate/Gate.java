@@ -1,12 +1,17 @@
 package gate;
 import transistor.Connection;
 
+/**
+ * 
+ * @author Taylor
+ *
+ */
 public abstract class Gate {
 	
 	private Connection[] myInputConnections;
 	private Connection myOutputConnection;
 	
-	public Gate(Connection theInputConnection) {
+	protected Gate(Connection theInputConnection) {
 		myInputConnections = new Connection[1];
 		myInputConnections[0] = theInputConnection;
 	}
