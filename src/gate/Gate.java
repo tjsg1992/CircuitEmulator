@@ -3,8 +3,8 @@ import transistor.Connection;
 
 public abstract class Gate {
 	
-	protected Connection[] myInputConnections;
-	protected Connection myOutputConnection;
+	private Connection[] myInputConnections;
+	private Connection myOutputConnection;
 	
 	public Gate(Connection theInputConnection) {
 		myInputConnections = new Connection[1];
@@ -19,6 +19,26 @@ public abstract class Gate {
 	
 	public Connection getOutput() {
 		return myOutputConnection;
+	}
+	
+	protected Connection[] getInputConnections() {
+		return myInputConnections;
+	}
+	
+	protected Connection getOutputConnection() {
+		return myOutputConnection;
+	}
+	
+	protected void setInputConnections(Connection[] theInputConnections) {
+		this.myInputConnections = theInputConnections;
+	}
+	
+	protected void setOutputConnection(Connection theOutputConnection) {
+		this.myOutputConnection = theOutputConnection;
+	}
+	
+	protected int numOfInputs() {
+		return myInputConnections.length;
 	}
 	
 }

@@ -20,10 +20,10 @@ public class NandGate extends Gate {
 	}
 	
 	private void setupGate() {
-		transistors = new Transistor[myInputConnections.length];
+		transistors = new Transistor[super.numOfInputs()];
 		
-		for(int i = 0; i < myInputConnections.length; i++) {
-			transistors[i] = new PTypeTransistor(mySource, myInputConnections[i]);
+		for(int i = 0; i < super.numOfInputs(); i++) {
+			transistors[i] = new PTypeTransistor(mySource, super.getInputConnections()[i]);
 		}
 		
 		Connection[] junctions = new Connection[transistors.length];
@@ -38,8 +38,8 @@ public class NandGate extends Gate {
 			transistors[i].getOutput().addJunction(gateJunction);
 		}
 		
-		super.myOutputConnection = gateJunction.getOutput();
-	}
+		super.setOutputConnection(gateJunction.getOutput());
+		}
 	
 	public void update() {
 		for(Transistor t : transistors) {

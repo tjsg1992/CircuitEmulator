@@ -18,14 +18,14 @@ public class NorGate extends Gate {
 	}
 	
 	private void setupGate() {
-		myTransistors = new Transistor[myInputConnections.length];
-		myTransistors[0] = new PTypeTransistor(mySource, myInputConnections[0]);
+		myTransistors = new Transistor[super.numOfInputs()];
+		myTransistors[0] = new PTypeTransistor(mySource, super.getInputConnections()[0]);
 		
 		for(int i = 1; i < myTransistors.length; i++) {
-			myTransistors[i] = new PTypeTransistor(myTransistors[i - 1].getOutput(), myInputConnections[i]);
+			myTransistors[i] = new PTypeTransistor(myTransistors[i - 1].getOutput(), super.getInputConnections()[i]);
 		}
 
-		super.myOutputConnection = myTransistors[myTransistors.length - 1].getOutput();
+		super.setOutputConnection(myTransistors[myTransistors.length - 1].getOutput());
 	}
 
 	@Override

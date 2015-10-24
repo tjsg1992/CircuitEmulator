@@ -16,8 +16,8 @@ public class NotGate extends Gate {
 	}
 
 	private void setupGate() {
-		myTransistor = new PTypeTransistor(new Source(), myInputConnections[0]);
-		super.myOutputConnection = myTransistor.getOutput();
+		myTransistor = new PTypeTransistor(new Source(), super.getInputConnections()[0]);
+		super.setOutputConnection(myTransistor.getOutput());
 	}
 	
 	@Override

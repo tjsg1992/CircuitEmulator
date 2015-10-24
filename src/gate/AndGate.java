@@ -14,9 +14,9 @@ public class AndGate extends Gate {
 	}
 	
 	private void setupGate() {
-		myNandGate = new NandGate(super.myInputConnections);
+		myNandGate = new NandGate(super.getInputConnections());
 		myNotGate = new NotGate(myNandGate.getOutput());
-		super.myOutputConnection = myNotGate.getOutput();
+		super.setOutputConnection(myNotGate.getOutput());
 	}
 
 	@Override

@@ -14,9 +14,9 @@ public class OrGate extends Gate {
 	}
 	
 	private void setupGate() {
-		myNorGate = new NorGate(super.myInputConnections);
+		myNorGate = new NorGate(super.getInputConnections());
 		myNotGate = new NotGate(myNorGate.getOutput());
-		super.myOutputConnection = myNotGate.getOutput();
+		super.setOutputConnection(myNotGate.getOutput());
 	}
 
 	@Override
