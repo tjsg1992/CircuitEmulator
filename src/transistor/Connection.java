@@ -8,50 +8,94 @@ import java.util.ArrayList;
  * By using Connections, we can keep circuit structures completely modular.
  * 
  * @author Taylor Gorman
- * @version 0.1, 10/22/15
+ * @version 0.2, 10/23/15
  */
 public class Connection {
+	
+	//Class Fields
+	
+	//True if the connection has power
 	private boolean power;
+	
+	//A Connection may have multiple transistors and junctions that it connects to.
 	private ArrayList<Transistor> myOutputTransistors;
 	private ArrayList<Junction> myJunctions;
 	
+	/**
+	 * Construct a Connection that is powered off and with not connected
+	 * to any outputs.
+	 */
 	public Connection() {
 		power = false;
 		myOutputTransistors = new ArrayList<Transistor>();
 		myJunctions = new ArrayList<Junction>();
 	}
 	
+
+
+	/**
+	 * Adds the specified Junction to the Connections list of
+	 * output Junctions it is connected to.<br>
+	 * Updates the Connection's outputs afterwards, which may or may
+	 * not power on the newly connected Junction.
+	 * @param theJunction The Junction to connect the Connection to
+	 */
 	public void addJunction(Junction theJunction) {
 		this.myJunctions.add(theJunction);
 		updateOutputs();
 	}
 	
+	/**
+	 * Adds the specified Transistor to the Connections list of
+	 * output Transistors it is connected to.<br>
+	 * The Connection's outputs will be updated afterward.
+	 * @param theOutputTransistor The Transistor to connect the Connection to
+	 */
 	public void addOutputTransistor(Transistor theOutputTransistor) {
 		this.myOutputTransistors.add(theOutputTransistor);
 		updateOutputs();
 	}
 	
+
+
+
+	/**
+	 * Power on the Connection.
+	 */
 	public void powerOn() {
-		if(power) return;
+		if(power) return; //Already powered. Return to stop update chain.
 		
 		power = true;
 		updateOutputs();
 	}
 	
+	/**
+	 * Power off the Connection.
+	 */
 	public void powerOff() {
-		if(!power) return;
+		if(!power) return; //Already unpowered. Return to stop update chain.
 		
 	
 		power = false;
 		updateOutputs();
 	}
 	
+
+
+
+	/**
+	 * Return whether or not the Connection is powered.
+	 * @return true if the Connection has power; false otherwise
+	 */
 	public boolean hasPower() {
 		return power;
 	}
 	
 	
-	
+	/*
+	 * Update the output junctions and transistors that the Connection
+	 * is connected to
+	 */
 	private void updateOutputs() {
 		
 		if(myJunctions.size() != 0) {

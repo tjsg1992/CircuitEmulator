@@ -3,11 +3,12 @@ package transistor;
 /**
  * An n-type transistor is one of two types of transistors.
  * <p>
- * An n-type transistor essentially acts as an inverter:<br>
- * If its input is on, it's output is off.<br>
- * If it's input is off, it's output is on.
+ * An n-type transistor essentially acts as an inverter if it is powered:<br>
+ * If its input is on, its output is off.<br>
+ * If it's input is off, its output is on.<br>
+ * If the transistor is not powered, its output is always off.
  * @author Taylor Gorman
- * @version 0.1, 10/22/15
+ * @version 0.2, 10/23/15
  *
  */
 public class PTypeTransistor extends Transistor {

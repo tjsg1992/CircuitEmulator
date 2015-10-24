@@ -3,17 +3,18 @@ package transistor;
 /**
  * An n-type transistor is one of two types of transistors.
  * <p>
- * An n-type transistor essentially acts as an extender:<br>
- * If its input is on, it's output is on.<br>
- * If it's input is off, it's output is off.
+ * An n-type transistor essentially acts as an extender, so long as it's powered:<br>
+ * If its input is on, its output is on.<br>
+ * If it's input is off, its output is off.<br>
+ * If the transistor is not powered, its output is always off.
  * @author Taylor Gorman
- * @version 0.1, 10/22/15
+ * @version 0.2, 10/23/15
  *
  */
 public class NTypeTransistor extends Transistor {
 	
 	/**
-	 * 
+	 * Construct an n-type transistor.
 	 */
 	public NTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
@@ -23,6 +24,7 @@ public class NTypeTransistor extends Transistor {
 	
 	@Override
 	public void update() {
+		//No matter the input, the output is off if the Transistor is not powered.
 		if(!hasPower()) myOutputConnection.powerOff();
 		
 		if(myInputConnection.hasPower()) {
