@@ -97,7 +97,6 @@ public class Connection {
 	 * is connected to
 	 */
 	private void updateOutputs() {
-		
 		if(myJunctions.size() != 0) {
 			for(Junction j : myJunctions) {
 				j.update();

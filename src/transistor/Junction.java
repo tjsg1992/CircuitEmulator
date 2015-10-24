@@ -52,4 +52,9 @@ public class Junction {
 	public Connection getOutput() {
 		return outputConnection;
 	}
+	
+	public void setInputs(Connection[] theInputs) {
+		this.inputConnections = theInputs;
+		update();
+	}
 }

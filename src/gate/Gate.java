@@ -58,7 +58,7 @@ public abstract class Gate {
 	 * Set the Gate's output Connection
 	 * @param theOutputConnection the output connection to be set
 	 */
-	protected void setOutputConnection(Connection theOutputConnection) {
+	public void setOutputConnection(Connection theOutputConnection) {
 		this.myOutputConnection = theOutputConnection;
 	}
 	

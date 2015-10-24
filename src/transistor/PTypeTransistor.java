@@ -21,7 +21,6 @@ public class PTypeTransistor extends Transistor {
 	
 	@Override
 	public void update() {
-		
 		if(!hasPower()) {
 			super.powerOffOutput();
 			return;
