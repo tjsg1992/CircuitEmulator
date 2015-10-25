@@ -22,8 +22,12 @@ public class Decoder {
 	 * The Decoder will have a number of outputs equal to the square of
 	 * the number of inputs.
 	 * @param theInputConnections the input connections
+	 * @exception if an input is not passed
 	 */
 	public Decoder(Connection[] theInputConnections) {
+		if(theInputConnections.length < 1) {
+			throw new IllegalArgumentException();
+		}
 		numInputsSquared = (int) Math.pow(2, theInputConnections.length);
 		
 		//Each input has its own inverter, of which half of its paths go through.

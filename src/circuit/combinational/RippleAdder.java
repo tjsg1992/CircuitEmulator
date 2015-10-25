@@ -16,6 +16,10 @@ public class RippleAdder {
 			throw new IllegalArgumentException();
 		}
 		
+		if(theSummandsA.length < 1) {
+			throw new IllegalArgumentException();
+		}
+		
 		this.mySummandsA = theSummandsA;
 		this.mySummandsB = theSummandsB;
 		

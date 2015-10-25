@@ -28,8 +28,12 @@ public abstract class Gate {
 	/**
 	 * Construct a Gate with multiple inputs, which includes most Gates.
 	 * @param theInputConnections the group of input connections
+	 * @exception IllegalArgumentException if less than two inputs are passed
 	 */
 	protected Gate(Connection[] theInputConnections) {
+		if(theInputConnections.length < 2) {
+			throw new IllegalArgumentException();
+		}
 		this.myInputConnections = theInputConnections;
 	}
 	
