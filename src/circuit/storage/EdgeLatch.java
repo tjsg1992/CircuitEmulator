@@ -20,7 +20,7 @@ public class EdgeLatch {
 		myWEInverter = new NotGate(myWELine);
 		
 		if(isRisingEdge) {
-			myLatch1 = new GatedDLatch(myDataLine, myWEInverter.getOutput());
+			myLatch1 = new GatedDLatch(myDataLine, myWELine);
 			myLatch2 = new GatedDLatch(myLatch1.getOutputA(), myWELine);
 		} else {
 			myLatch1 = new GatedDLatch(myDataLine, myWELine);
