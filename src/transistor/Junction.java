@@ -22,6 +22,10 @@ public class Junction {
 	public Junction(Connection[] theInputConnections) {
 		this.inputConnections = theInputConnections;
 		outputConnection = new Connection();
+		
+		for(Connection c : theInputConnections) {
+			c.addJunction(this);
+		}
 		update();
 	}
 	
@@ -55,6 +59,11 @@ public class Junction {
 	
 	public void setInputs(Connection[] theInputs) {
 		this.inputConnections = theInputs;
+		
+		for(Connection c : theInputs) {
+			c.addJunction(this);
+		}
+		
 		update();
 	}
 }
