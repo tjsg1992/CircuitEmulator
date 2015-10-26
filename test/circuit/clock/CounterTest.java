@@ -19,14 +19,16 @@ public class CounterTest {
 
 	@Test
 	public void defaultStateTest() {
-		assertFalse(myCounter.getOutputConnections()[0].hasPower());
-		assertFalse(myCounter.getOutputConnections()[1].hasPower());
-		assertFalse(myCounter.getOutputConnections()[2].hasPower());
-		assertFalse(myCounter.getOutputConnections()[3].hasPower());
+		assertTrue(myCounter.getOutputConnections()[0].hasPower());
+		assertTrue(myCounter.getOutputConnections()[1].hasPower());
+		assertTrue(myCounter.getOutputConnections()[2].hasPower());
+		assertTrue(myCounter.getOutputConnections()[3].hasPower());
 	}
 	
 	@Test
-	public void clockOffTest() {
+	public void clockOnTest() {
+		myClock.powerOn();
+		myClock.powerOff();
 		myClock.powerOn();
 		myClock.powerOff();
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
