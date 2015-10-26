@@ -21,6 +21,11 @@ public class MemoryArray {
 	public final int numRegisters;
 	public final int registerSize;
 	
+	/*
+	 * TODO
+	 * Take some time to rewrite this class to where is uses the new Multiplexer object.
+	 */	
+	
 	/**
 	 * Construct an array of memory.<br>
 	 * The size of the memory is determined by the parameters passed to it.<br>
@@ -31,6 +36,7 @@ public class MemoryArray {
 	 * @param theWE the write-enable line, which can be powered on to write the inputs to the current register
 	 */
 	public MemoryArray(Connection[] theInputConnections, Connection[] theDecoderConnections, Connection theWE) {
+		
 		myInputs = theInputConnections;
 		myWE = theWE;
 		
