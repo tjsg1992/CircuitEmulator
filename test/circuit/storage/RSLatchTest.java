@@ -23,8 +23,8 @@ public class RSLatchTest {
 
 	@Test
 	public void quiescentStateTest() {
-		assertTrue(myLatch.getOutputA().hasPower());
-		assertFalse(myLatch.getOutputB().hasPower());
+		assertFalse(myLatch.getOutputA().hasPower());
+		assertTrue(myLatch.getOutputB().hasPower());
 	}
 	
 	@Test

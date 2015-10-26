@@ -20,6 +20,7 @@ public class Connection {
 	//A Connection may have multiple transistors and junctions that it connects to.
 	private ArrayList<Transistor> myOutputTransistors;
 	private ArrayList<Junction> myJunctions;
+	private ArrayList<ThreadConnection> myThreads;
 	
 	/**
 	 * Construct a Connection that is powered off and with not connected
@@ -29,6 +30,7 @@ public class Connection {
 		power = false;
 		myOutputTransistors = new ArrayList<Transistor>();
 		myJunctions = new ArrayList<Junction>();
+		myThreads = new ArrayList<ThreadConnection>();
 	}
 	
 
@@ -53,6 +55,11 @@ public class Connection {
 	 */
 	public void addOutputTransistor(Transistor theOutputTransistor) {
 		this.myOutputTransistors.add(theOutputTransistor);
+		updateOutputs();
+	}
+	
+	public void addThreadConnection(ThreadConnection thread) {
+		this.myThreads.add(thread);
 		updateOutputs();
 	}
 	
@@ -105,6 +112,12 @@ public class Connection {
 		
 		if(myOutputTransistors.size() != 0) {
 			for(Transistor t : myOutputTransistors) {
+				t.update();
+			}
+		}
+		
+		if(myThreads.size() != 0) {
+			for(ThreadConnection t : myThreads) {
 				t.update();
 			}
 		}

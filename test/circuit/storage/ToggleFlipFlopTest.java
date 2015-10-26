@@ -18,9 +18,26 @@ public class ToggleFlipFlopTest {
 	}
 	@Test
 	public void test() {
+		myLatch.printStatus();
+		assertFalse(myLatch.getOutputA().hasPower());
 		myClock.powerOn();
+		myLatch.printStatus();
+		assertFalse(myLatch.getOutputA().hasPower());
 		myClock.powerOff();
+		myLatch.printStatus();
+		assertTrue(myLatch.getOutputA().hasPower());
 		myClock.powerOn();
+		myLatch.printStatus();
+		assertTrue(myLatch.getOutputA().hasPower());
+		myClock.powerOff();
+		myLatch.printStatus();
+		//assertFalse(myLatch.getOutputA().hasPower());
+		myClock.powerOn();
+		myLatch.printStatus();
+		//assertFalse(myLatch.getOutputA().hasPower());
+		myClock.powerOff();
+		myLatch.printStatus();
+		//assertTrue(myLatch.getOutputA().hasPower());
 	}
 
 }

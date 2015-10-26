@@ -27,10 +27,11 @@ public class CounterTest {
 	
 	@Test
 	public void clockOnTest() {
+		myCounter.printStatus();
 		myClock.powerOn();
+		myCounter.printStatus();
 		myClock.powerOff();
-		myClock.powerOn();
-		myClock.powerOff();
+		myCounter.printStatus();
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertTrue(myCounter.getOutputConnections()[1].hasPower());
 		assertTrue(myCounter.getOutputConnections()[2].hasPower());

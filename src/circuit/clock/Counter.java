@@ -1,15 +1,11 @@
 package circuit.clock;
 
-import gate.NotGate;
-import circuit.storage.EdgeLatch;
 import circuit.storage.ToggleFlipFlop;
 import transistor.Connection;
-import transistor.Junction;
 
 public class Counter {
 	private int numCounters;
 	private Connection myClockLine;
-	private Junction[] myJunctions;
 	private ToggleFlipFlop[] myLatches;
 	private Connection[] myOutputConnections;
 
@@ -17,7 +13,7 @@ public class Counter {
 	public Counter(Connection theClockLine, int theNumCounters) {
 		numCounters = theNumCounters;
 		myOutputConnections = new Connection[numCounters];		
-		myClockLine = theClockLine;		
+		myClockLine = theClockLine;
 		myLatches = new ToggleFlipFlop[numCounters];
 		
 		myLatches[0] = new ToggleFlipFlop(myClockLine);
@@ -31,5 +27,11 @@ public class Counter {
 	
 	public Connection[] getOutputConnections() {
 		return myOutputConnections;
+	}
+	
+	public void printStatus() {
+		for(int i = 0; i < numCounters; i++) {
+			System.out.println(i + ": " + myLatches[i].getOutputA().hasPower() + " " + myLatches[i].getOutputB().hasPower());
+		}
 	}
 }

@@ -22,21 +22,21 @@ public class GatedDLatchTest {
 
 	@Test
 	public void quiescentStateTest() {
-		assertTrue(myLatch.getOutputA().hasPower());
-		assertFalse(myLatch.getOutputB().hasPower());
+		assertFalse(myLatch.getOutputA().hasPower());
+		assertTrue(myLatch.getOutputB().hasPower());
 	}
 	
 	@Test
 	public void writesOnlyWhenEnabledTest() {
 		myConnectionD.powerOn();
 		
-		assertTrue(myLatch.getOutputA().hasPower());
-		assertFalse(myLatch.getOutputB().hasPower());
+		assertFalse(myLatch.getOutputA().hasPower());
+		assertTrue(myLatch.getOutputB().hasPower());
 		
 		myConnectionD.powerOff();
 		
-		assertTrue(myLatch.getOutputA().hasPower());
-		assertFalse(myLatch.getOutputB().hasPower());
+		assertFalse(myLatch.getOutputA().hasPower());
+		assertTrue(myLatch.getOutputB().hasPower());
 	}
 	
 	@Test

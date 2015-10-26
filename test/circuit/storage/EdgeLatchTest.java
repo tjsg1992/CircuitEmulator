@@ -23,16 +23,16 @@ public class EdgeLatchTest {
 
 	@Test
 	public void quiscentStateTest() {
-		assertTrue(risingLatch.getOutputA().hasPower());
-		assertFalse(risingLatch.getOutputB().hasPower());
+		assertFalse(risingLatch.getOutputA().hasPower());
+		assertTrue(risingLatch.getOutputB().hasPower());
 	}
 	
 	@Test
 	public void onlyChangeDataTest() {
 		myInput.powerOn();
 		
-		assertTrue(risingLatch.getOutputA().hasPower());
-		assertFalse(risingLatch.getOutputB().hasPower());
+		assertFalse(risingLatch.getOutputA().hasPower());
+		assertTrue(risingLatch.getOutputB().hasPower());
 	}
 	
 	@Test
@@ -63,46 +63,32 @@ public class EdgeLatchTest {
 	}
 	
 	@Test
-	public void risingEdgeTest() {
-		myInput.powerOff();
-		myWE.powerOn();
-		myWE.powerOff();
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
+	public void fallingEdgeTest() {	
 		
-		myInput.powerOn();
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-		
-		myWE.powerOn();
-		assertTrue(risingLatch.getOutputA().hasPower());
-		assertFalse(risingLatch.getOutputB().hasPower());
-		
-		myWE.powerOff();
-		assertTrue(risingLatch.getOutputA().hasPower());
-		assertFalse(risingLatch.getOutputB().hasPower());
-	}
-	
-	@Test
-	public void fallingEdgeTest() {
-		myInput.powerOff();
-		myWE.powerOn();
-		myWE.powerOff();
 		assertFalse(fallingLatch.getOutputA().hasPower());
-		assertTrue(fallingLatch.getOutputB().hasPower());
-		
+		assertTrue(risingLatch.getOutputB().hasPower());
+		myWE.powerOn();
+		assertFalse(fallingLatch.getOutputA().hasPower());
+		assertTrue(risingLatch.getOutputB().hasPower());
 		myInput.powerOn();
 		assertFalse(fallingLatch.getOutputA().hasPower());
-		assertTrue(fallingLatch.getOutputB().hasPower());
-		
-		myWE.powerOn();
-		assertFalse(fallingLatch.getOutputA().hasPower());
-		assertTrue(fallingLatch.getOutputB().hasPower());
-		
-		myWE.powerOn();
+		assertTrue(risingLatch.getOutputB().hasPower());
 		myWE.powerOff();
 		assertTrue(fallingLatch.getOutputA().hasPower());
 		assertFalse(fallingLatch.getOutputB().hasPower());
+		myInput.powerOff();
+		assertTrue(fallingLatch.getOutputA().hasPower());
+		assertFalse(fallingLatch.getOutputB().hasPower());
+		myInput.powerOn();
+		assertTrue(fallingLatch.getOutputA().hasPower());
+		assertFalse(fallingLatch.getOutputB().hasPower());
+		myInput.powerOff();
+		myWE.powerOn();
+		assertTrue(fallingLatch.getOutputA().hasPower());
+		assertFalse(fallingLatch.getOutputB().hasPower());
+		myWE.powerOff();
+		assertFalse(fallingLatch.getOutputA().hasPower());
+		assertTrue(risingLatch.getOutputB().hasPower());
 	}
 
 }

@@ -63,6 +63,8 @@ public class RSLatch {
 		//Set each junction to be an output of the latch
 		outputA = junctionA.getOutput();
 		outputB = junctionB.getOutput();
+		
+		outputB.powerOn();
 	}
 	
 	/**

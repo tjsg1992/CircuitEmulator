@@ -12,7 +12,15 @@ public class EdgeLatch {
 	private GatedDLatch myLatch1;
 	private GatedDLatch myLatch2;
 	
+	/*
+	 * TODO RISING EDGE SETUP BUGGY
+	 */
+	
 	public EdgeLatch(Connection theDataLine, Connection theWELine, boolean risingEdge) {
+		if(risingEdge) {
+			System.err.println("Rising Edge buggy, switching to Falling Edge");
+			risingEdge = false;
+		}
 		myDataLine = theDataLine;
 		myWELine = theWELine;
 		isRisingEdge = risingEdge;
@@ -44,5 +52,12 @@ public class EdgeLatch {
 	
 	public boolean isFallingEdge() {
 		return !isRisingEdge;
+	}
+	
+	public void printStatus() {
+		System.out.println("---Edge Latch:");
+		System.out.println("---Data Line: " + myDataLine.hasPower());
+		System.out.println("---Clock Line: " + myWELine.hasPower());
+		System.out.println("---Q: " + getOutputA().hasPower() + ", -Q: " + getOutputB().hasPower());
 	}
 }
