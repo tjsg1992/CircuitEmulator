@@ -20,7 +20,8 @@ public class Connection {
 	//A Connection may have multiple transistors and junctions that it connects to.
 	private ArrayList<Transistor> myOutputTransistors;
 	private ArrayList<Junction> myJunctions;
-	private ArrayList<ThreadConnection> myThreads;
+	private ThreadConnection myThread;
+	private int myThreadDelay;
 	
 	/**
 	 * Construct a Connection that is powered off and with not connected
@@ -30,7 +31,7 @@ public class Connection {
 		power = false;
 		myOutputTransistors = new ArrayList<Transistor>();
 		myJunctions = new ArrayList<Junction>();
-		myThreads = new ArrayList<ThreadConnection>();
+		myThread = null;
 	}
 	
 
@@ -58,12 +59,11 @@ public class Connection {
 		updateOutputs();
 	}
 	
-	public void addThreadConnection(ThreadConnection thread) {
-		this.myThreads.add(thread);
-		updateOutputs();
+	public void initializeThread(int theDelay) {
+		myThreadDelay = theDelay;
+		myThread = new ThreadConnection(this, myThreadDelay);
+		myThread.start();
 	}
-	
-
 
 
 	/**
@@ -71,9 +71,14 @@ public class Connection {
 	 */
 	public void powerOn() {
 		if(power) return; //Already powered. Return to stop update chain.
-		
 		power = true;
-		updateOutputs();
+		
+		if(myThread != null) {
+			initializeThread(myThreadDelay);
+		} else {
+			updateOutputs();
+		}	
+		
 	}
 	
 	/**
@@ -82,9 +87,13 @@ public class Connection {
 	public void powerOff() {
 		if(!power) return; //Already unpowered. Return to stop update chain.
 		
-	
 		power = false;
-		updateOutputs();
+		
+		if(myThread != null) {
+			initializeThread(myThreadDelay);
+		} else {
+			updateOutputs();
+		}	
 	}
 	
 
@@ -103,7 +112,7 @@ public class Connection {
 	 * Update the output junctions and transistors that the Connection
 	 * is connected to
 	 */
-	private void updateOutputs() {
+	public void updateOutputs() {
 		if(myJunctions.size() != 0) {
 			for(Junction j : myJunctions) {
 				j.update();
@@ -112,12 +121,6 @@ public class Connection {
 		
 		if(myOutputTransistors.size() != 0) {
 			for(Transistor t : myOutputTransistors) {
-				t.update();
-			}
-		}
-		
-		if(myThreads.size() != 0) {
-			for(ThreadConnection t : myThreads) {
 				t.update();
 			}
 		}

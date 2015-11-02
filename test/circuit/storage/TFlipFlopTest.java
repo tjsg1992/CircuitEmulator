@@ -27,67 +27,67 @@ public class TFlipFlopTest {
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertFalse(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOff();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myClock.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 		
 		myToggle.powerOn();
-		Thread.sleep(5);
+		Thread.sleep(0, 7);
 		assertTrue(myLatch.getOutputA().hasPower());
 	}
 

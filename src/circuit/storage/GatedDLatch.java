@@ -34,4 +34,8 @@ public class GatedDLatch {
 	public Connection getOutputB() {
 		return myRSLatch.getOutputB();
 	}
+	
+	public void printStatus() {
+		System.out.println("------Data: " + myConnectionD.hasPower() + ", Clock: " + myConnectionWE.hasPower());
+	}
 }

@@ -18,45 +18,44 @@ public class EdgeLatchTest {
 		myInput = new Connection();
 		myWE = new Connection();
 		risingLatch = new EdgeLatch(myInput, myWE, true);
-		fallingLatch = new EdgeLatch(myInput, myWE, false);
+		//fallingLatch = new EdgeLatch(myInput, myWE, true);
 	}
 
-	@Test
-	public void quiscentStateTest() {
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-	}
-	
-	@Test
-	public void onlyChangeDataTest() {
-		myInput.powerOn();
-		
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-	}
-	
-	@Test
-	public void changeDataAndWETest() {
-		myInput.powerOff();
-		myWE.powerOn();
-		myWE.powerOff();
-		
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-	}
+//	@Test
+//	public void quiscentStateTest() {
+//		assertFalse(risingLatch.getOutputA().hasPower());
+//		assertTrue(risingLatch.getOutputB().hasPower());
+//	}
+//	
+//	@Test
+//	public void onlyChangeDataTest() {
+//		myInput.powerOn();
+//		
+//		assertFalse(risingLatch.getOutputA().hasPower());
+//		assertTrue(risingLatch.getOutputB().hasPower());
+//	}
+//	
+//	@Test
+//	public void changeDataAndWETest() {
+//		myInput.powerOff();
+//		myWE.powerOn();
+//		myWE.powerOff();
+//		
+//		assertFalse(risingLatch.getOutputA().hasPower());
+//		assertTrue(risingLatch.getOutputB().hasPower());
+//	}
 	
 	@Test
 	public void switchStatesTest() {
-		myInput.powerOff();
-		myWE.powerOn();
-		myWE.powerOff();
-		
-		assertFalse(risingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-		
+		System.out.println("Starting Test");
 		myInput.powerOn();
 		myWE.powerOn();
-		myWE.powerOff();
+		try {
+			Thread.sleep(2);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		assertTrue(risingLatch.getOutputA().hasPower());
 		assertFalse(risingLatch.getOutputB().hasPower());
@@ -65,30 +64,54 @@ public class EdgeLatchTest {
 	@Test
 	public void fallingEdgeTest() {	
 		
-		assertFalse(fallingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-		myWE.powerOn();
-		assertFalse(fallingLatch.getOutputA().hasPower());
+		assertFalse(risingLatch.getOutputA().hasPower());
 		assertTrue(risingLatch.getOutputB().hasPower());
 		myInput.powerOn();
-		assertFalse(fallingLatch.getOutputA().hasPower());
-		assertTrue(risingLatch.getOutputB().hasPower());
-		myWE.powerOff();
-		assertTrue(fallingLatch.getOutputA().hasPower());
-		assertFalse(fallingLatch.getOutputB().hasPower());
-		myInput.powerOff();
-		assertTrue(fallingLatch.getOutputA().hasPower());
-		assertFalse(fallingLatch.getOutputB().hasPower());
-		myInput.powerOn();
-		assertTrue(fallingLatch.getOutputA().hasPower());
-		assertFalse(fallingLatch.getOutputB().hasPower());
-		myInput.powerOff();
+		
 		myWE.powerOn();
-		assertTrue(fallingLatch.getOutputA().hasPower());
-		assertFalse(fallingLatch.getOutputB().hasPower());
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertTrue(risingLatch.getOutputA().hasPower());
+		assertFalse(risingLatch.getOutputB().hasPower());
+		
+		myInput.powerOff();
+		assertTrue(risingLatch.getOutputA().hasPower());
+		assertFalse(risingLatch.getOutputB().hasPower());
+		
 		myWE.powerOff();
-		assertFalse(fallingLatch.getOutputA().hasPower());
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertFalse(risingLatch.getOutputA().hasPower());
 		assertTrue(risingLatch.getOutputB().hasPower());
+		
+		myInput.powerOn();
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertFalse(risingLatch.getOutputA().hasPower());
+		assertTrue(risingLatch.getOutputB().hasPower());
+		
+		
+		myWE.powerOn();
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertTrue(risingLatch.getOutputA().hasPower());
+		assertFalse(risingLatch.getOutputB().hasPower());
 	}
 
 }

@@ -2,6 +2,7 @@ package circuit.storage;
 
 import gate.NotGate;
 import transistor.Connection;
+import transistor.ThreadConnection;
 
 public class EdgeLatch {
 	private Connection myDataLine;
@@ -13,12 +14,12 @@ public class EdgeLatch {
 	private GatedDLatch myLatch2;
 	
 	/*
-	 * TODO RISING EDGE SETUP BUGGY
+	 * TODO FALLING EDGE SETUP BUGGY
 	 */
 	
 	public EdgeLatch(Connection theDataLine, Connection theWELine, boolean risingEdge) {
-		if(risingEdge) {
-			System.err.println("Rising Edge buggy, switching to Falling Edge");
+		if(!risingEdge) {
+			System.err.println("Falling Edge buggy, switching to Rising Edge");
 			risingEdge = false;
 		}
 		myDataLine = theDataLine;
@@ -26,13 +27,14 @@ public class EdgeLatch {
 		isRisingEdge = risingEdge;
 		
 		myWEInverter = new NotGate(myWELine);
+		myWEInverter.getOutput().initializeThread(2);
 		
 		if(isRisingEdge) {
 			myLatch1 = new GatedDLatch(myDataLine, myWELine);
-			myLatch2 = new GatedDLatch(myLatch1.getOutputA(), myWELine);
+			myLatch2 = new GatedDLatch(myLatch1.getOutputA(), myWEInverter.getOutput());
 		} else {
 			myLatch1 = new GatedDLatch(myDataLine, myWELine);
-			myLatch2 = new GatedDLatch(myLatch1.getOutputA(), myWEInverter.getOutput());
+			myLatch2 = new GatedDLatch(myLatch1.getOutputA(), myWELine);
 		}
 		
 		
@@ -55,9 +57,11 @@ public class EdgeLatch {
 	}
 	
 	public void printStatus() {
-		System.out.println("---Edge Latch:");
+		System.out.println("\n---Edge Latch:");
 		System.out.println("---Data Line: " + myDataLine.hasPower());
-		System.out.println("---Clock Line: " + myWELine.hasPower());
+		System.out.println("---Clock Line: " + myWELine.hasPower() + ", Latch 1 Q: " + myLatch1.getOutputA().hasPower());
+		System.out.println("---Sl Clock Line: " + myWEInverter.getOutput().hasPower());
+		myLatch2.printStatus();
 		System.out.println("---Q: " + getOutputA().hasPower() + ", -Q: " + getOutputB().hasPower());
 	}
 }
