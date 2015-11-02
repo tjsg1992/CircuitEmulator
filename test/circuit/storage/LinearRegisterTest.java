@@ -27,7 +27,7 @@ public class LinearRegisterTest {
 	@Test
 	public void quiescentStateTest() {
 		for(int i = 0; i < 8; i++) {
-			assertTrue(myRegister.getOutputConnections()[i].hasPower());
+			assertFalse(myRegister.getOutputConnections()[i].hasPower());
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class LinearRegisterTest {
 		myInputConnections[0].powerOn();
 		
 		for(int i = 0; i < 8; i++) {
-			assertTrue(myRegister.getOutputConnections()[i].hasPower());
+			assertFalse(myRegister.getOutputConnections()[i].hasPower());
 		}
 		
 		myWE.powerOn();
