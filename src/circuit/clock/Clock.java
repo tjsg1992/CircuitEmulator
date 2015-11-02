@@ -3,13 +3,14 @@ package circuit.clock;
 import transistor.Connection;
 
 public class Clock extends Thread {
+	public static final int CLOCK_SPEED = 5;
 	private Connection myClock;
 	private long nextTime;
 	
 	public Clock() {
 		myClock = new Connection();
 		myClock.initializeThread(0);
-		nextTime = System.currentTimeMillis() - System.currentTimeMillis() % 5 + 5;
+		nextTime = System.currentTimeMillis() - System.currentTimeMillis() % CLOCK_SPEED + CLOCK_SPEED;
 	}
 	
 	@SuppressWarnings("static-access")
@@ -27,7 +28,7 @@ public class Clock extends Thread {
 				e.printStackTrace();
 			}
 			
-			nextTime = System.currentTimeMillis() - System.currentTimeMillis() % 5 + 5;
+			nextTime = System.currentTimeMillis() - System.currentTimeMillis() % CLOCK_SPEED + CLOCK_SPEED;
 			if(myClock.hasPower()) {
 				myClock.powerOff();
 			} else {

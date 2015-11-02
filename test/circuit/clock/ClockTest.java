@@ -18,19 +18,19 @@ public class ClockTest {
 	public void test() throws InterruptedException {
 		assertFalse(myClock.getOutput().hasPower());
 		
-		Thread.sleep(5);
+		Thread.sleep(Clock.CLOCK_SPEED);
 		assertTrue(myClock.getOutput().hasPower());
 		
-		Thread.sleep(5);
+		Thread.sleep(Clock.CLOCK_SPEED);
 		assertFalse(myClock.getOutput().hasPower());
 		
-		Thread.sleep(5);
+		Thread.sleep(Clock.CLOCK_SPEED);
 		assertTrue(myClock.getOutput().hasPower());
 		
-		Thread.sleep(50);
+		Thread.sleep(Clock.CLOCK_SPEED * 10);
 		assertTrue(myClock.getOutput().hasPower());
 		
-		Thread.sleep(505);
+		Thread.sleep(Clock.CLOCK_SPEED * 100 + 5);
 		assertFalse(myClock.getOutput().hasPower());
 	}
 

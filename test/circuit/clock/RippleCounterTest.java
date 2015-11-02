@@ -65,32 +65,32 @@ public class RippleCounterTest {
 		myCounter = new RippleCounter(clock.getOutput());
 		
 		clock.start();		
-		Thread.sleep(5 - System.currentTimeMillis() % 5 + 2);
+		Thread.sleep(Clock.CLOCK_SPEED - System.currentTimeMillis() % Clock.CLOCK_SPEED + 2);
 
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertFalse(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(10);
+		Thread.sleep(Clock.CLOCK_SPEED * 2);
 		assertFalse(myCounter.getOutputConnections()[0].hasPower());
 		assertTrue(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(10);
+		Thread.sleep(Clock.CLOCK_SPEED * 2);
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertTrue(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(10);
+		Thread.sleep(Clock.CLOCK_SPEED * 2);
 		assertFalse(myCounter.getOutputConnections()[0].hasPower());
 		assertFalse(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(10);
+		Thread.sleep(Clock.CLOCK_SPEED * 2);
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertFalse(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(40);
+		Thread.sleep(Clock.CLOCK_SPEED * 8);
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertFalse(myCounter.getOutputConnections()[1].hasPower());
 		
-		Thread.sleep(400);
+		Thread.sleep(Clock.CLOCK_SPEED * 800);
 		assertTrue(myCounter.getOutputConnections()[0].hasPower());
 		assertFalse(myCounter.getOutputConnections()[1].hasPower());
 	}
