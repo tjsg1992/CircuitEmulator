@@ -25,6 +25,13 @@ public class Junction {
 		update();
 	}
 	
+	public Junction(Connection theConnection) {
+		Connection[] input = {theConnection};
+		this.inputConnections = input;
+		outputConnection = new Connection();
+		update();
+	}
+	
 	/**
 	 * Power on the output Connection if any of the input
 	 * Connections have power.
@@ -55,6 +62,12 @@ public class Junction {
 	
 	public void setInputs(Connection[] theInputs) {
 		this.inputConnections = theInputs;		
+		update();
+	}
+	
+	public void setInput(Connection theInput) {
+		Connection[] input = {theInput};
+		this.inputConnections = input;		
 		update();
 	}
 }

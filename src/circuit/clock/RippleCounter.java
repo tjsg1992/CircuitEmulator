@@ -13,7 +13,7 @@ public class RippleCounter {
 	
 	private int mySize;
 	
-	public RippleCounter(Connection theClock, int theSize) throws InterruptedException {
+	public RippleCounter(Connection theClock, int theSize) {
 		myClock = theClock;
 		mySize = theSize;
 		myToggle = new Connection();
@@ -30,16 +30,21 @@ public class RippleCounter {
 			myOutputConnections[i] = myLatches[i].getOutputA();
 		}
 		
-		Thread.sleep(0, 5);		
-		myToggle.powerOn();	
-		
+		try {
+			Thread.sleep(0, 5);
+			myToggle.powerOn();				
 			
-		Thread.sleep(0, 5);		
-		myLatches[0].getOutputB().powerOn();		
-		Thread.sleep(0, 5);		
-		myLatches[0].getOutputB().powerOff();		
-		Thread.sleep(0, 5);
-		myLatches[0].getOutputB().powerOn();
+			Thread.sleep(0, 5);		
+			myLatches[0].getOutputB().powerOn();		
+			Thread.sleep(0, 5);		
+			myLatches[0].getOutputB().powerOff();		
+			Thread.sleep(0, 5);
+			myLatches[0].getOutputB().powerOn();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
 	}
 	
 	public Connection[] getOutputConnections() {
