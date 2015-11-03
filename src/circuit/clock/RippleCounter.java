@@ -7,39 +7,42 @@ public class RippleCounter {
 	private Connection myClock;
 	private Connection myToggle;
 	
-	private TFlipFlop myLatch1;
-	private TFlipFlop myLatch2;
+	private TFlipFlop[] myLatches;
 	
 	private Connection[] myOutputConnections;
 	
-	public RippleCounter(Connection theClock) throws InterruptedException {
+	private int mySize;
+	
+	public RippleCounter(Connection theClock, int theSize) throws InterruptedException {
 		myClock = theClock;
+		mySize = theSize;
 		myToggle = new Connection();
 		myToggle.powerOff();
-		myOutputConnections = new Connection[2];
 		
-		myLatch1 = new TFlipFlop(myClock, myToggle);
-		myOutputConnections[0] = myLatch1.getOutputA();
+		myOutputConnections = new Connection[mySize];
+		myLatches = new TFlipFlop[mySize];
 		
-		myLatch2 = new TFlipFlop(myLatch1.getOutputB(), myToggle);
-		myOutputConnections[1] = myLatch2.getOutputA();
+		myLatches[0] = new TFlipFlop(myClock, myToggle);
+		myOutputConnections[0] = myLatches[0].getOutputA();
+		
+		for(int i = 1; i < mySize; i++) {
+			myLatches[i] = new TFlipFlop(myLatches[i - 1].getOutputB(), myToggle);
+			myOutputConnections[i] = myLatches[i].getOutputA();
+		}
 		
 		Thread.sleep(0, 5);		
-		myToggle.powerOn();		
+		myToggle.powerOn();	
+		
+			
 		Thread.sleep(0, 5);		
-		myLatch1.getOutputB().powerOn();		
+		myLatches[0].getOutputB().powerOn();		
 		Thread.sleep(0, 5);		
-		myLatch1.getOutputB().powerOff();		
+		myLatches[0].getOutputB().powerOff();		
 		Thread.sleep(0, 5);
-		myLatch1.getOutputB().powerOn();
+		myLatches[0].getOutputB().powerOn();
 	}
 	
 	public Connection[] getOutputConnections() {
 		return myOutputConnections;
-	}
-	
-	public void printStatus() {
-		System.out.println("Latch 1 -- " + "Toggle: " + myToggle.hasPower() + ", Clock: " + myClock.hasPower() + ", -Q: " + myLatch1.getOutputB().hasPower());
-		System.out.println("Latch 2 -- " + "Toggle: " + myToggle.hasPower() + ", Clock: " + myLatch1.getOutputB().hasPower() + ", -Q: " + myLatch2.getOutputB().hasPower());
 	}
 }

@@ -14,7 +14,7 @@ public class RippleCounterTest {
 	@Before
 	public void setUp() throws Exception {
 		myClock = new Connection();
-		myCounter = new RippleCounter(myClock);
+		myCounter = new RippleCounter(myClock, 2);
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class RippleCounterTest {
 	@Test
 	public void actualClockTest() throws InterruptedException {
 		Clock clock = new Clock();
-		myCounter = new RippleCounter(clock.getOutput());
+		myCounter = new RippleCounter(clock.getOutput(), 2);
 		
 		clock.start();		
 		Thread.sleep(Clock.CLOCK_SPEED - System.currentTimeMillis() % Clock.CLOCK_SPEED + 2);
