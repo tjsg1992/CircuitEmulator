@@ -10,7 +10,7 @@ public class MemoryArray {
 	private Decoder myAddressDecoder;
 	
 	private Connection[] myInputs;
-	private LinearRegister[] myRegisters;
+	private Register[] myRegisters;
 	
 	private AndGate[] myWriteGates;
 	private AndGate[][] myRegisterReadGates;
@@ -68,10 +68,10 @@ public class MemoryArray {
 	 * Create each register, which is connected to the inputs and the WE line.
 	 */
 	private void setupRegisters() {
-		myRegisters = new LinearRegister[numRegisters];
+		myRegisters = new Register[numRegisters];
 		
 		for(int i = 0; i < numRegisters; i++) {
-			myRegisters[i] = new LinearRegister(myInputs, myWriteGates[i].getOutput());
+			myRegisters[i] = new Register(myInputs, myWriteGates[i].getOutput());
 		}
 	}
 	

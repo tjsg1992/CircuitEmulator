@@ -10,7 +10,7 @@ import transistor.Connection;
 public class LinearRegisterTest {
 	private Connection[] myInputConnections;
 	private Connection myWE;
-	private LinearRegister myRegister;
+	private Register myRegister;
 
 	@Before
 	public void setUp() throws Exception {
@@ -21,7 +21,7 @@ public class LinearRegisterTest {
 			myInputConnections[i] = new Connection();
 		}
 		
-		myRegister = new LinearRegister(myInputConnections, myWE);
+		myRegister = new Register(myInputConnections, myWE);
 	}
 
 	@Test

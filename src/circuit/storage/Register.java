@@ -2,14 +2,14 @@ package circuit.storage;
 
 import transistor.Connection;
 
-public class LinearRegister {
+public class Register {
 	private Connection[] myInputConnections;
 	private Connection[] myOutputConnections;
 	private Connection myWE;
 	
 	private GatedDLatch[] myLatches;
 	
-	public LinearRegister(Connection[] theInputConnections, Connection theWE) {
+	public Register(Connection[] theInputConnections, Connection theWE) {
 		this.myInputConnections = theInputConnections;
 		myLatches = new GatedDLatch[myInputConnections.length];
 		this.myOutputConnections = new Connection[myInputConnections.length];
