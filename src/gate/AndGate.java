@@ -22,7 +22,7 @@ public class AndGate extends Gate {
 		setupGate();
 		update();
 	}
-	
+
 	/*
 	 * An AND Gate functions by inverting the output of a NAND Gate
 	 * with a NOT Gate.

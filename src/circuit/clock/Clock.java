@@ -1,14 +1,28 @@
 package circuit.clock;
 
+import gate.AndGate;
+import gate.NotGate;
 import transistor.Connection;
+import transistor.Junction;
 
 public class Clock extends Thread {
-	public static final int CLOCK_SPEED = 5;
+	public static final int CLOCK_SPEED = 20;
 	private Connection myClock;
 	private long nextTime;
 	
+	private Junction myHaltJunction;
+	private NotGate myHaltInverter;
+	private AndGate myHaltGate;
+	
 	public Clock() {
+		Connection[] junctionInputs = {new Connection()};
+		myHaltJunction = new Junction(junctionInputs);
+		myHaltInverter = new NotGate(myHaltJunction.getOutput());
+		
 		myClock = new Connection();
+		Connection[] haltGateGroup = {myHaltInverter.getOutput(), myClock};
+		myHaltGate = new AndGate(haltGateGroup);
+		
 		myClock.initializeThread(0);
 		nextTime = System.currentTimeMillis() - System.currentTimeMillis() % CLOCK_SPEED + CLOCK_SPEED;
 	}
@@ -39,7 +53,13 @@ public class Clock extends Thread {
 	}
 	
 	public Connection getOutput() {
-		return myClock;
+		return myHaltGate.getOutput();
+	}
+	
+	public void setHaltLine(Connection theHaltLine) {
+		Connection[] haltLineGroup = {theHaltLine};
+		theHaltLine.addJunction(myHaltJunction);
+		myHaltJunction.setInputs(haltLineGroup);
 	}
 	
 

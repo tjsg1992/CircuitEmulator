@@ -11,6 +11,7 @@ import circuit.storage.Register;
 public class LC3 {
 	static final int WORD_SIZE = 16;
 	private FiniteStateMachine myStateMachine;
+	private Connection[] myOutputConnections;
 	
 	public LC3() {
 		myStateMachine = new FiniteStateMachine();
@@ -36,8 +37,7 @@ public class LC3 {
 			inputJunctions[i] = new Junction(new Connection());
 			junctionOutputs[i] = inputJunctions[i].getOutput();
 		}
-		
-		adderConnections[0].powerOn();
+
 		Register programCounter = new Register(junctionOutputs, myStateMachine.getPCLoad());	
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
 		
@@ -48,21 +48,14 @@ public class LC3 {
 		
 		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());
 		Register memoryAddressRegister = new Register(gatePC.getOutputConnections(), myStateMachine.getMARLoad());
-		
-		while(true) {
-			try {
-				Thread.sleep(6);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for(int i = 0; i < WORD_SIZE; i++) {
-				if(junctionOutputs[WORD_SIZE - i - 1].hasPower()) System.out.print("1");
-				else System.out.print("0");
-			}
-			System.out.print("\n");
-		}
-		
+		myOutputConnections = programCounter.getOutputConnections();
+		adderConnections[0].powerOn();
+		myStateMachine.start();		
+				
+	}
+	
+	public Connection[] getCurrentOutput() {
+		return myStateMachine.getOutputs();
 	}
 
 }
