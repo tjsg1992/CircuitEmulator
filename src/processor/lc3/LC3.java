@@ -37,8 +37,10 @@ public class LC3 {
 			inputJunctions[i] = new Junction(new Connection());
 			junctionOutputs[i] = inputJunctions[i].getOutput();
 		}
+		
+		
 
-		Register programCounter = new Register(junctionOutputs, myStateMachine.getPCLoad());	
+		GatedRegister programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
 		
 		for(int i = 0; i < WORD_SIZE; i++) {
@@ -48,14 +50,17 @@ public class LC3 {
 		
 		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());
 		Register memoryAddressRegister = new Register(gatePC.getOutputConnections(), myStateMachine.getMARLoad());
-		myOutputConnections = programCounter.getOutputConnections();
+		myOutputConnections = gatePC.getOutputConnections();
 		adderConnections[0].powerOn();
-		myStateMachine.start();		
+
+		myStateMachine.start();
+		
+		
 				
 	}
 	
 	public Connection[] getCurrentOutput() {
-		return myStateMachine.getOutputs();
+		return myOutputConnections;
 	}
 
 }

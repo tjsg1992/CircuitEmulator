@@ -2,6 +2,7 @@ package processor.lc3;
 
 import gate.AndGate;
 import gate.NandGate;
+import gate.NotGate;
 import transistor.Connection;
 import circuit.clock.Clock;
 import circuit.clock.RippleCounter;
@@ -16,16 +17,32 @@ public class FiniteStateMachine {
 	
 	public FiniteStateMachine() {
 		myClock = new Clock();
+		NotGate clockInverter = new NotGate(myClock.getOutput());
 		
 		RippleCounter myCounter = new RippleCounter(myClock.getOutput(), 2);
 		Decoder myDecoder = new Decoder(myCounter.getOutputConnections());
-		myOutputs = myDecoder.getOutputConnections();
+		
+		AndGate[] decoderBuffers = new AndGate[4];
+		Connection[] bufferGroup = new Connection[4];
+		for(int i = 0; i < 4; i++) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Connection[] andGateGroup = {clockInverter.getOutput(), myDecoder.getOutputConnections()[i]};
+			decoderBuffers[i] = new AndGate(andGateGroup);
+			bufferGroup[i] = decoderBuffers[i].getOutput();
+		}
+		
+		myOutputs = bufferGroup;
 		
 		haltCounter = new RippleCounter(myOutputs[3], 4);
 		haltDecoder = new Decoder(haltCounter.getOutputConnections());
 		
-		myClock.setHaltLine(myOutputs[3]);
-		//myClock.setHaltLine(haltDecoder.getOutputConnections()[15]);
+		//myClock.setHaltLine(myOutputs[3]);
+		//myClock.setHaltLine(haltDecoder.getOutputConnections()[4]);
 	}
 	
 	public Connection getPCLoad() {

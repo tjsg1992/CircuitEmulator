@@ -9,14 +9,13 @@ public class CircuitBuilder {
 	public static void main(String[] args) {
 		LC3 myLC3 = new LC3();
 
-		while(true) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		while(true)
+		try {
+			Thread.sleep(10);
 			printOutputs(myLC3.getCurrentOutput());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		

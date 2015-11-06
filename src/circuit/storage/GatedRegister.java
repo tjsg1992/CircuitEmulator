@@ -8,17 +8,17 @@ import transistor.Connection;
  *
  */
 public class GatedRegister {
-	private TFlipFlop[] myLatches;
+	private ETDFlipFlop[] myLatches;
 	private Connection[] myOutputConnections;
 	private Connection myClock;
 	
 	public GatedRegister(Connection[] theInputConnections, Connection theClock) {
 		myClock = theClock;
-		myLatches = new TFlipFlop[theInputConnections.length];
+		myLatches = new ETDFlipFlop[theInputConnections.length];
 		myOutputConnections = new Connection[theInputConnections.length];
 		
 		for(int i = 0; i < theInputConnections.length; i++) {
-			myLatches[i] = new TFlipFlop(myClock, theInputConnections[i]);
+			myLatches[i] = new ETDFlipFlop(theInputConnections[i], myClock);
 			myOutputConnections[i] = myLatches[i].getOutputA();			
 		}
 	}
