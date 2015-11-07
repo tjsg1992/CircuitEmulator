@@ -21,6 +21,6 @@ public class ThreadConnection extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		myParent.updateOutputs();
+		myParent.update();
 	}
 }

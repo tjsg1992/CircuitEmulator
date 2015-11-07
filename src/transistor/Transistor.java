@@ -11,7 +11,7 @@ package transistor;
  * @author Taylor Gorman
  * @version 0.2, 10/23/15
  */
-public abstract class Transistor {
+public abstract class Transistor implements Connectable {
 	
 	private Connection myPowerConnection;
 	private Connection myInputConnection;	
@@ -28,6 +28,10 @@ public abstract class Transistor {
 		this.myInputConnection = theInputConnection;
 		this.myOutputConnection = new Connection();
 		update();
+	}
+	
+	public void connectOutputTo(Connectable theOtherConnectable) {
+		this.myOutputConnection = (Connection) theOtherConnectable;
 	}
 	
 	/**
@@ -73,20 +77,6 @@ public abstract class Transistor {
 	 */
 	protected void powerOffOutput() {
 		myOutputConnection.powerOff();
-	}
-	
-	/**
-	 * Adds itself to the input connection's list of output transistors.
-	 */
-	protected void connectSelfToInput() {
-		myInputConnection.addOutputTransistor(this);
-	}
-	
-	/**
-	 * Adds itself to the power connection's list of output transistors.
-	 */
-	protected void connectSelfToPower() {
-		myPowerConnection.addOutputTransistor(this);
 	}
 	
 }

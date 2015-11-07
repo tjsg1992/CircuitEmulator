@@ -16,7 +16,7 @@ public class PTypeTransistorTest {
 		myInputConnection.powerOn();
 		
 		myTestTransistor = new PTypeTransistor(new Source(), myInputConnection);
-		myInputConnection.addOutputTransistor(myTestTransistor);
+		myInputConnection.connectOutputTo(myTestTransistor);
 	}
 
 	@Test

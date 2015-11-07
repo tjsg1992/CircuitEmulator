@@ -16,7 +16,7 @@ public class NTypeTransistorTest {
 		myInputConnection.powerOn();
 		
 		myTestTransistor = new NTypeTransistor(new Source(), myInputConnection);
-		myInputConnection.addOutputTransistor(myTestTransistor);
+		myInputConnection.connectOutputTo(myTestTransistor);
 	}
 
 	@Test
@@ -39,8 +39,6 @@ public class NTypeTransistorTest {
 		myInputConnection.powerOff();
 		assertFalse(myTestTransistor.getOutput().hasPower());
 	}
-	
-	
 	
 	
 

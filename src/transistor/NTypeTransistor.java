@@ -18,8 +18,6 @@ public class NTypeTransistor extends Transistor {
 	 */
 	public NTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
-		super.connectSelfToInput();
-		super.connectSelfToPower();
 	}
 	
 	@Override

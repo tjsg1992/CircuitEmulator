@@ -15,8 +15,6 @@ public class PTypeTransistor extends Transistor {
 	
 	public PTypeTransistor(Connection thePowerConnection, Connection theInputConnection) {
 		super(thePowerConnection, theInputConnection);
-		super.connectSelfToInput();
-		super.connectSelfToPower();
 	}
 	
 	@Override

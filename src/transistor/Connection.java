@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Taylor Gorman
  * @version 0.2, 10/23/15
  */
-public class Connection {
+public class Connection implements Connectable {
 	
 	//Class Fields
 	
@@ -18,8 +18,8 @@ public class Connection {
 	private boolean power;
 	
 	//A Connection may have multiple transistors and junctions that it connects to.
-	private ArrayList<Transistor> myOutputTransistors;
 	private ArrayList<Junction> myJunctions;
+	private ArrayList<Connectable> myOutputConnectables;
 	private ThreadConnection myThread;
 	private int myThreadDelay;
 	
@@ -29,9 +29,14 @@ public class Connection {
 	 */
 	public Connection() {
 		power = false;
-		myOutputTransistors = new ArrayList<Transistor>();
 		myJunctions = new ArrayList<Junction>();
+		myOutputConnectables = new ArrayList<Connectable>();
 		myThread = null;
+	}
+	
+	public void connectOutputTo(Connectable theOtherConnectable) {
+		myOutputConnectables.add(theOtherConnectable);
+		update();
 	}
 	
 
@@ -45,18 +50,7 @@ public class Connection {
 	 */
 	public void addJunction(Junction theJunction) {
 		this.myJunctions.add(theJunction);
-		updateOutputs();
-	}
-	
-	/**
-	 * Adds the specified Transistor to the Connections list of
-	 * output Transistors it is connected to.<br>
-	 * The Connection's outputs will be updated afterward.
-	 * @param theOutputTransistor The Transistor to connect the Connection to
-	 */
-	public void addOutputTransistor(Transistor theOutputTransistor) {
-		this.myOutputTransistors.add(theOutputTransistor);
-		updateOutputs();
+		update();
 	}
 	
 	public void initializeThread(int theDelay) {
@@ -76,7 +70,7 @@ public class Connection {
 		if(myThread != null) {
 			initializeThread(myThreadDelay);
 		} else {
-			updateOutputs();
+			update();
 		}	
 		
 	}
@@ -92,7 +86,7 @@ public class Connection {
 		if(myThread != null) {
 			initializeThread(myThreadDelay);
 		} else {
-			updateOutputs();
+			update();
 		}	
 	}
 	
@@ -112,17 +106,18 @@ public class Connection {
 	 * Update the output junctions and transistors that the Connection
 	 * is connected to
 	 */
-	public void updateOutputs() {
+	public void update() {
 		if(myJunctions.size() != 0) {
 			for(Junction j : myJunctions) {
 				j.update();
 			}
 		}
 		
-		if(myOutputTransistors.size() != 0) {
-			for(Transistor t : myOutputTransistors) {
-				t.update();
+		if(myOutputConnectables.size() != 0) {
+			for(Connectable c : myOutputConnectables) {
+				c.update();
 			}
 		}
+		
 	}
 }
