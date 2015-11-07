@@ -45,7 +45,7 @@ public class LC3 {
 		
 		for(int i = 0; i < WORD_SIZE; i++) {
 			inputJunctions[i].setInput(counterIncrement.getOutputSums()[i]);
-			counterIncrement.getOutputSums()[i].addJunction(inputJunctions[i]);
+			counterIncrement.getOutputSums()[i].connectOutputTo(inputJunctions[i]);
 		}
 		
 		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());

@@ -58,7 +58,7 @@ public class Clock extends Thread {
 	
 	public void setHaltLine(Connection theHaltLine) {
 		Connection[] haltLineGroup = {theHaltLine};
-		theHaltLine.addJunction(myHaltJunction);
+		theHaltLine.connectOutputTo(myHaltJunction);
 		myHaltJunction.setInputs(haltLineGroup);
 	}
 	

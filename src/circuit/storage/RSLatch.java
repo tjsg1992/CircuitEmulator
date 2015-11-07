@@ -55,10 +55,10 @@ public class RSLatch {
 		Connection[] junctionBInputs = {gateR.getOutput()};
 		
 		junctionA.setInputs(junctionAInputs);
-		gateS.getOutput().addJunction(junctionA);
+		gateS.getOutput().connectOutputTo(junctionA);
 		
 		junctionB.setInputs(junctionBInputs);
-		gateR.getOutput().addJunction(junctionB);
+		gateR.getOutput().connectOutputTo(junctionB);
 		
 		//Set each junction to be an output of the latch
 		outputA = junctionA.getOutput();

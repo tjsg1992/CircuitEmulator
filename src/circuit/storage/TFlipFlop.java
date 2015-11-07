@@ -47,8 +47,8 @@ public class TFlipFlop {
 		myJunctionA.setInputs(junctionGroupA);
 		myJunctionB.setInputs(junctionGroupB);
 		
-		myLatch.getOutputA().addJunction(myJunctionA);
-		myLatch.getOutputB().addJunction(myJunctionB);
+		myLatch.getOutputA().connectOutputTo(myJunctionA);
+		myLatch.getOutputB().connectOutputTo(myJunctionB);
 	}
 	
 	public Connection getOutputA() {

@@ -20,9 +20,9 @@ public class JunctionTest {
 		Connection[] junctionGroup = {connectionA, connectionB, connectionC};
 		junction = new Junction(junctionGroup);
 		
-		connectionA.addJunction(junction);
-		connectionB.addJunction(junction);
-		connectionC.addJunction(junction);
+		connectionA.connectOutputTo(junction);
+		connectionB.connectOutputTo(junction);
+		connectionC.connectOutputTo(junction);
 	}
 
 	@Test

@@ -60,7 +60,7 @@ public class NandGate extends Gate {
 		
 		
 		for(int i = 0; i < transistors.length; i ++) {
-			transistors[i].getOutput().addJunction(gateJunction); //Connects junction to each output
+			transistors[i].getOutput().connectOutputTo(gateJunction); //Connects junction to each output
 		}
 		
 		

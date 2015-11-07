@@ -54,7 +54,7 @@ public class ETDFlipFlop {
 			myNandGates[i] = new NandGate(nandGroups[i]);
 			Connection[] junctionInput = {myNandGates[i].getOutput()};
 			myNandGateOutputs[i].setInputs(junctionInput);
-			myNandGates[i].getOutput().addJunction(myNandGateOutputs[i]);
+			myNandGates[i].getOutput().connectOutputTo(myNandGateOutputs[i]);
 		}
 		
 		myNandGates[0].getOutput().powerOff();

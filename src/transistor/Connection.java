@@ -18,7 +18,6 @@ public class Connection implements Connectable {
 	private boolean power;
 	
 	//A Connection may have multiple transistors and junctions that it connects to.
-	private ArrayList<Junction> myJunctions;
 	private ArrayList<Connectable> myOutputConnectables;
 	private ThreadConnection myThread;
 	private int myThreadDelay;
@@ -29,7 +28,6 @@ public class Connection implements Connectable {
 	 */
 	public Connection() {
 		power = false;
-		myJunctions = new ArrayList<Junction>();
 		myOutputConnectables = new ArrayList<Connectable>();
 		myThread = null;
 	}
@@ -39,19 +37,6 @@ public class Connection implements Connectable {
 		update();
 	}
 	
-
-
-	/**
-	 * Adds the specified Junction to the Connections list of
-	 * output Junctions it is connected to.<br>
-	 * Updates the Connection's outputs afterwards, which may or may
-	 * not power on the newly connected Junction.
-	 * @param theJunction The Junction to connect the Connection to
-	 */
-	public void addJunction(Junction theJunction) {
-		this.myJunctions.add(theJunction);
-		update();
-	}
 	
 	public void initializeThread(int theDelay) {
 		myThreadDelay = theDelay;
@@ -91,8 +76,6 @@ public class Connection implements Connectable {
 	}
 	
 
-
-
 	/**
 	 * Return whether or not the Connection is powered.
 	 * @return true if the Connection has power; false otherwise
@@ -107,12 +90,6 @@ public class Connection implements Connectable {
 	 * is connected to
 	 */
 	public void update() {
-		if(myJunctions.size() != 0) {
-			for(Junction j : myJunctions) {
-				j.update();
-			}
-		}
-		
 		if(myOutputConnectables.size() != 0) {
 			for(Connectable c : myOutputConnectables) {
 				c.update();

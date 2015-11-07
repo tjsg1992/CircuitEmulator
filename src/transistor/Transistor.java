@@ -27,6 +27,9 @@ public abstract class Transistor implements Connectable {
 		this.myPowerConnection = thePowerConnection;
 		this.myInputConnection = theInputConnection;
 		this.myOutputConnection = new Connection();
+		
+		theInputConnection.connectOutputTo(this);
+		thePowerConnection.connectOutputTo(this);
 		update();
 	}
 	

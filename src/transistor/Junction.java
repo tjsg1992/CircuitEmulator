@@ -10,9 +10,9 @@ package transistor;
  * @author Taylor Gorman
  * @version 0.2, 10/23/15
  */
-public class Junction {
+public class Junction implements Connectable {
 	private Connection[] inputConnections;
-	private Connection outputConnection;
+	private Connection myOutputConnection;
 	
 	/**
 	 * Construct a Junction that links a number of Connection inputs.<br>
@@ -21,14 +21,18 @@ public class Junction {
 	 */
 	public Junction(Connection[] theInputConnections) {
 		this.inputConnections = theInputConnections;
-		outputConnection = new Connection();
+		myOutputConnection = new Connection();
+		
+		for(Connection c : theInputConnections) {
+			c.connectOutputTo(this);
+		}
 		update();
 	}
 	
 	public Junction(Connection theConnection) {
 		Connection[] input = {theConnection};
 		this.inputConnections = input;
-		outputConnection = new Connection();
+		myOutputConnection = new Connection();
 		update();
 	}
 	
@@ -46,9 +50,9 @@ public class Junction {
 		
 		//Power the output if an input is powered.
 		if(connectionActive) {
-			outputConnection.powerOn();
+			myOutputConnection.powerOn();
 		} else {
-			outputConnection.powerOff();
+			myOutputConnection.powerOff();
 		}
 	}
 	
@@ -57,7 +61,7 @@ public class Junction {
 	 * @return the output Connection
 	 */
 	public Connection getOutput() {
-		return outputConnection;
+		return myOutputConnection;
 	}
 	
 	public void setInputs(Connection[] theInputs) {
@@ -69,5 +73,10 @@ public class Junction {
 		Connection[] input = {theInput};
 		this.inputConnections = input;		
 		update();
+	}
+
+	@Override
+	public void connectOutputTo(Connectable theOtherConnectable) {
+		myOutputConnection = (Connection) theOtherConnectable;		
 	}
 }
