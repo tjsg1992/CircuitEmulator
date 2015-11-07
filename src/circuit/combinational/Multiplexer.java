@@ -148,10 +148,17 @@ public class Multiplexer {
 	
 	
 	//Helper Methods
+	
+	/*
+	 * Return the number of input connections.
+	 */
 	private int numInputs() {
 		return myInputConnections.length;
 	}
 	
+	/*
+	 * Return the number of selection lines.
+	 */
 	private int numSelects() {
 		return mySelectionLines.length;
 	}
