@@ -2,8 +2,6 @@ package processor.lc3;
 
 import transistor.Connection;
 import transistor.Junction;
-import circuit.clock.Clock;
-import circuit.combinational.FullAdder;
 import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
 import circuit.storage.Register;
@@ -41,7 +39,7 @@ public class LC3 {
 		Junction delayedPCJunction = new Junction(myStateMachine.getPCLoad());
 		myStateMachine.getPCLoad().connectOutputTo(delayedPCJunction);
 		Connection delayedPCLoad = delayedPCJunction.getOutput();
-		delayedPCLoad.initializeThread(900000);
+		delayedPCLoad.initializeThread(20000);
 		
 		
 

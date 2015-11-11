@@ -1,7 +1,6 @@
 package main;
 
 import processor.lc3.LC3;
-import circuit.storage.RSLatch;
 import transistor.Connection;
 
 public class CircuitBuilder {
@@ -23,7 +22,7 @@ public class CircuitBuilder {
 	}
 	
 	private static void printOutputs(Connection[] theOutputs) {
-		for(int i = 3; i >= 0; i--) {
+		for(int i = 15; i >= 0; i--) {
 			if(theOutputs[i].hasPower()) {
 				System.out.print("1");
 			} else {
