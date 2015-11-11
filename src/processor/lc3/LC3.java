@@ -39,7 +39,7 @@ public class LC3 {
 		Junction delayedPCJunction = new Junction(myStateMachine.getPCLoad());
 		myStateMachine.getPCLoad().connectOutputTo(delayedPCJunction);
 		Connection delayedPCLoad = delayedPCJunction.getOutput();
-		delayedPCLoad.initializeThread(20000);
+		delayedPCLoad.initializeThread(2000);
 		
 		
 
