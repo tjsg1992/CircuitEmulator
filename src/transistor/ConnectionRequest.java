@@ -1,19 +1,19 @@
 package transistor;
 
 public class ConnectionRequest {
-	private Connection myConnection;
-	private boolean isPoweringOn;
+	private Connectable myConnection;
+	private int myPriority;
 	
-	public ConnectionRequest(Connection theConnection, boolean poweringOn) {
+	public ConnectionRequest(Connectable theConnection, int priority) {
 		myConnection = theConnection;
-		isPoweringOn = poweringOn;
+		myPriority = priority;
 	}
 	
-	public Connection getConnection() {
+	public Connectable getConnection() {
 		return myConnection;
 	}
 	
-	public boolean isPoweringOn() {
-		return isPoweringOn;
+	public int getPriority() {
+		return myPriority;
 	}
 }

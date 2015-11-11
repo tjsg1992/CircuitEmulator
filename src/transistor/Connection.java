@@ -2,6 +2,8 @@ package transistor;
 
 import java.util.ArrayList;
 
+import main.ConnectionManager;
+
 /**
  * A Connection is a wire that is either on or off.
  * A single Connection is most often used by two circuit structures.
@@ -19,7 +21,7 @@ public class Connection implements Connectable {
 	
 	//A Connection may have multiple transistors and junctions that it connects to.
 	private ArrayList<Connectable> myOutputConnectables;
-	private ThreadConnection myThread;
+	//private ThreadConnection myThread;
 	private int myThreadDelay;
 	
 	/**
@@ -29,7 +31,7 @@ public class Connection implements Connectable {
 	public Connection() {
 		power = false;
 		myOutputConnectables = new ArrayList<Connectable>();
-		myThread = null;
+		//myThread = null;
 	}
 	
 	public void connectOutputTo(Connectable theOtherConnectable) {
@@ -39,9 +41,9 @@ public class Connection implements Connectable {
 	
 	
 	public void initializeThread(int theDelay) {
-		myThreadDelay = theDelay;
-		myThread = new ThreadConnection(this, myThreadDelay);
-		myThread.start();
+//		myThreadDelay = theDelay;
+//		myThread = new ThreadConnection(this, myThreadDelay);
+//		myThread.start();
 	}
 
 
@@ -52,11 +54,13 @@ public class Connection implements Connectable {
 		if(power) return; //Already powered. Return to stop update chain.
 		power = true;
 		
-		if(myThread != null) {
-			initializeThread(myThreadDelay);
-		} else {
-			update();
-		}	
+//		if(myThread != null) {
+//			initializeThread(myThreadDelay);
+//		} else {
+//			update();
+//		}	
+		
+		update();
 		
 	}
 	
@@ -68,11 +72,13 @@ public class Connection implements Connectable {
 		
 		power = false;
 		
-		if(myThread != null) {
-			initializeThread(myThreadDelay);
-		} else {
-			update();
-		}	
+//		if(myThread != null) {
+//			initializeThread(myThreadDelay);
+//		} else {
+//			update();
+//		}	
+		
+		update();
 	}
 	
 
@@ -92,9 +98,14 @@ public class Connection implements Connectable {
 	public void update() {
 		if(myOutputConnectables.size() != 0) {
 			for(Connectable c : myOutputConnectables) {
-				c.update();
+				ConnectionManager.INSTANCE.addRequest(c);
 			}
 		}
 		
+		if(!ConnectionManager.INSTANCE.isReading()) {
+			ConnectionManager.INSTANCE.readRequests();
+		}
+		
+				
 	}
 }

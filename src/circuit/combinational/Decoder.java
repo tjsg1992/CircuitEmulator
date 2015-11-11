@@ -3,6 +3,7 @@ package circuit.combinational;
 import gate.AndGate;
 import gate.NotGate;
 import transistor.Connection;
+import transistor.Junction;
 
 /**
  * A Decoder interprets a bit pattern.<br>
@@ -14,7 +15,8 @@ import transistor.Connection;
  */
 public class Decoder {
 	
-	private Connection[] myOutputConnections;	
+	private Connection[] myOutputConnections;
+	private Connection[] myExtendedConnections;
 	private int numInputsSquared;
 	
 	/**
@@ -33,6 +35,8 @@ public class Decoder {
 		//Each input has its own inverter, of which half of its paths go through.
 		//The inverted half of paths are collected here.
 		Connection[] inputInverts = getInvertedConnections(theInputConnections);
+		
+		myExtendedConnections = getExtendedConnections(theInputConnections);
 		
 		//Normal and inverted paths are then put into various groups, such that
 		//each group has one of either for each input, and whose assortment is unique.
@@ -56,6 +60,19 @@ public class Decoder {
 		}
 		
 		return invertedConnections;
+	}
+	
+	private Connection[] getExtendedConnections(Connection[] theConnections) {
+		Connection[] extendedConnections = new Connection[theConnections.length];
+		
+		for(int i = 0; i < theConnections.length; i++) {
+			Connection[] junctionGroup = {theConnections[i]};
+			Junction extender = new Junction(junctionGroup);
+			extendedConnections[i] = extender.getOutput();
+			extender.getOutput().connectOutputTo(extender);
+		}
+		
+		return extendedConnections;
 	}
 	
 	/*
@@ -95,7 +112,7 @@ public class Decoder {
 				if(invertFlag) {
 					connectionGroups[j][i] = theInputInverts[i]; //Connect inverted path
 				} else {
-					connectionGroups[j][i] = theInputConnections[i]; //Connect normal path
+					connectionGroups[j][i] = myExtendedConnections[i]; //Connect normal path
 				}
 				
 				switchCountdown--;

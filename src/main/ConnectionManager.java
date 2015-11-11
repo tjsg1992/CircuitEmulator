@@ -3,6 +3,7 @@ package main;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import transistor.Connectable;
 import transistor.Connection;
 import transistor.ConnectionRequest;
 
@@ -10,35 +11,49 @@ public enum ConnectionManager {
 	INSTANCE;
 
 	private static LinkedList<ConnectionRequest> connectionQueue = new LinkedList<ConnectionRequest>();
-	private static boolean isReading = false;
-	private static ConnectionRequest currentRequest;
+	private static boolean readingFlag = false;
+	private static int writingPriority = 0;
+	private static int readingPriority = 0;
 	
-	public void addRequest(Connection theConnection, boolean poweringOn) {
-		ConnectionRequest newRequest = new ConnectionRequest(theConnection, poweringOn);
+	public void addRequest(Connectable theConnection) {
+		ConnectionRequest newRequest = new ConnectionRequest(theConnection, writingPriority);
 		connectionQueue.add(newRequest);
-		
-		if(!isReading) {
-			readRequests();
-		}
 	}
 	
 	public void readRequests() {
-		isReading = true;
 		
-		while(connectionQueue.size() > 0) {
-			currentRequest = connectionQueue.get(0);
-			if(currentRequest.isPoweringOn()) {
-				currentRequest.getConnection().powerOn();
-			} else {
-				currentRequest.getConnection().powerOff();
+//		if(connectionQueue.size() > 0) {
+//			printStatus();
+//		}
+		
+		writingPriority++;
+		readingFlag = true;
+		while(connectionQueue.size() > 0 && connectionQueue.peek().getPriority() <= readingPriority) {
+			Connectable nextConnection = connectionQueue.pop().getConnection();
+			
+			if(connectionQueue.size() <= 0 || connectionQueue.peek().getPriority() > readingPriority) {
+				readingFlag = false;
 			}
 			
-			connectionQueue.remove(0);
+			nextConnection.update();		
 		}
-		
-		isReading = false;
+		readingFlag = false;
+		readingPriority++;
 	}
 	
+	public void increaseReadingPriority() {
+		readingPriority++;
+	}
 	
+	public boolean isReading() {
+		return readingFlag;
+	}
+	
+	private void printStatus() {
+		System.out.println("\nManager Status:");
+		for(ConnectionRequest c : connectionQueue) {
+			System.out.println(c.getConnection() + " : " + c.getPriority());
+		}
+	}
 	
 }
