@@ -4,6 +4,7 @@ import gate.AndGate;
 import gate.NotGate;
 import gate.OrGate;
 import transistor.Connection;
+import transistor.Junction;
 
 /**
  * A Full Adder adds two bits together.<br>
@@ -25,9 +26,12 @@ public class FullAdder {
 		private NotGate[] myNotGates;
 		
 		public FullAdder(Connection theSummandA, Connection theSummandB, Connection theCarryIn) {
-			mySummandA = theSummandA;
-			mySummandB = theSummandB;
-			myCarryIn = theCarryIn;
+			Junction aJunction = new Junction(theSummandA);
+			Junction bJunction = new Junction(theSummandB);
+			Junction carryJunction = new Junction(theCarryIn);
+			mySummandA = aJunction.getOutput();
+			mySummandB = bJunction.getOutput();
+			myCarryIn = carryJunction.getOutput();
 			
 			//Eight AND Gates for the eight unique combinations of A, B, and Carry-In
 			myAndGates = new AndGate[8];
