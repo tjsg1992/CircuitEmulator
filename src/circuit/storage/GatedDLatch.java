@@ -3,6 +3,7 @@ package circuit.storage;
 import gate.NandGate;
 import gate.NotGate;
 import transistor.Connection;
+import transistor.Junction;
 
 public class GatedDLatch {
 	private Connection myConnectionD;
@@ -17,8 +18,9 @@ public class GatedDLatch {
 	}
 	
 	private void setupGates() {
+		Junction dExtender = new Junction(myConnectionD);
 		NotGate dInverter = new NotGate(myConnectionD);
-		Connection[] sConnections = {myConnectionD, myConnectionWE};
+		Connection[] sConnections = {dExtender.getOutput(), myConnectionWE};
 		Connection[] rConnections = {dInverter.getOutput(), myConnectionWE};
 		
 		NandGate nandGateS = new NandGate(sConnections);

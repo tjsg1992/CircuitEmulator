@@ -5,44 +5,34 @@ import java.util.Queue;
 
 import transistor.Connectable;
 import transistor.Connection;
-import transistor.ConnectionRequest;
 
 public enum ConnectionManager {
 	INSTANCE;
 
-	private static LinkedList<ConnectionRequest> connectionQueue = new LinkedList<ConnectionRequest>();
+	private static LinkedList<Connectable> nextQueue = new LinkedList<Connectable>();
+	private static LinkedList<Connectable> currentQueue = new LinkedList<Connectable>();
 	private static boolean readingFlag = false;
-	private static int writingPriority = 0;
-	private static int readingPriority = 0;
 	
 	public void addRequest(Connectable theConnection) {
-		ConnectionRequest newRequest = new ConnectionRequest(theConnection, writingPriority);
-		connectionQueue.add(newRequest);
+		nextQueue.add(theConnection);
 	}
 	
 	public void readRequests() {
-		
-//		if(connectionQueue.size() > 0) {
-//			printStatus();
-//		}
-		
-		writingPriority++;
 		readingFlag = true;
-		while(connectionQueue.size() > 0 && connectionQueue.peek().getPriority() <= readingPriority) {
-			Connectable nextConnection = connectionQueue.pop().getConnection();
-			
-			if(connectionQueue.size() <= 0 || connectionQueue.peek().getPriority() > readingPriority) {
-				readingFlag = false;
-			}
-			
+		
+		while(currentQueue.size() > 0) {
+			Connectable nextConnection = currentQueue.pop();			
 			nextConnection.update();		
 		}
+		
+		currentQueue = nextQueue;
+		nextQueue = new LinkedList<Connectable>();
+		
+		if(currentQueue.size() > 0) {
+			readRequests();
+		}
+		
 		readingFlag = false;
-		readingPriority++;
-	}
-	
-	public void increaseReadingPriority() {
-		readingPriority++;
 	}
 	
 	public boolean isReading() {
@@ -51,8 +41,8 @@ public enum ConnectionManager {
 	
 	private void printStatus() {
 		System.out.println("\nManager Status:");
-		for(ConnectionRequest c : connectionQueue) {
-			System.out.println(c.getConnection() + " : " + c.getPriority());
+		for(Connectable c : currentQueue) {
+			System.out.println(c);
 		}
 	}
 	

@@ -6,7 +6,7 @@ import transistor.Connection;
 import transistor.Junction;
 
 public class Clock extends Thread {
-	public static final int CLOCK_SPEED = 200;
+	public static final int CLOCK_SPEED = 2;
 	private Connection myClock;
 	private long nextTime;
 	

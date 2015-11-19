@@ -11,7 +11,7 @@ public class CircuitBuilder {
 
 		while(true)
 		try {
-			Thread.sleep(10);
+			Thread.sleep(1);
 			printOutputs(myLC3.getCurrentOutput());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -23,7 +23,7 @@ public class CircuitBuilder {
 	}
 	
 	private static void printOutputs(Connection[] theOutputs) {
-		for(int i = 3; i >= 0; i--) {
+		for(int i = 15; i >= 0; i--) {
 			if(theOutputs[i].hasPower()) {
 				System.out.print("1");
 			} else {

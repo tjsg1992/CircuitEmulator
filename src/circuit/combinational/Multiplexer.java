@@ -4,6 +4,7 @@ import gate.AndGate;
 import gate.NotGate;
 import gate.OrGate;
 import transistor.Connection;
+import transistor.Junction;
 
 /**
  * A Multiplexer has n "select lines" and n-squared inputs.<br>
@@ -21,7 +22,9 @@ public class Multiplexer {
 	private OrGate myOutputGate;
 	
 	private NotGate[] myInverters;
+	private Junction[] myExtenders;
 	private Connection[] myInvertedSelections;
+	private Connection[] myExtendedSelections;
 	
 	private Connection[][] myConnectionGroups;
 	
@@ -46,11 +49,14 @@ public class Multiplexer {
 		//Create a NOT gate for each selection line.
 		myAndGates = new AndGate[numInputs()];
 		myInverters = new NotGate[numSelects()];
+		myExtenders = new Junction[numSelects()];
 		
 		//Each selection line will have an inverse and normal path.
 		myInvertedSelections = new Connection[numSelects()];
+		myExtendedSelections = new Connection[numSelects()];
 		
 		createInverters();
+		createExtenders();
 		setupConnectionGroups();
 		setupGates();
 	}
@@ -63,6 +69,13 @@ public class Multiplexer {
 		for(int i = 0; i < numSelects(); i++) {
 			myInverters[i] = new NotGate(mySelectionLines[i]);
 			myInvertedSelections[i] = myInverters[i].getOutput();
+		}
+	}
+	
+	private void createExtenders() {
+		for(int i = 0; i < numSelects(); i++) {
+			myExtenders[i] = new Junction(mySelectionLines[i]);
+			myExtendedSelections[i] = myExtenders[i].getOutput();
 		}
 	}
 	
@@ -112,7 +125,7 @@ public class Multiplexer {
 					myConnectionGroups[j][i + 1] = myInvertedSelections[i];
 				} else {
 					//Assign the normal path to the group.
-					myConnectionGroups[j][i + 1] = mySelectionLines[i];
+					myConnectionGroups[j][i + 1] = myExtendedSelections[i];
 				}
 				
 				switchCountdown--;
