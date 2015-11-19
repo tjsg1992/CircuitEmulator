@@ -4,6 +4,7 @@ import gate.AndGate;
 import gate.NotGate;
 import gate.OrGate;
 import transistor.Connection;
+import transistor.Junction;
 
 /**
  * A Full Adder adds two bits together.<br>
@@ -17,24 +18,31 @@ public class FullAdder {
 
 		private Connection mySummandA, mySummandB, myCarryIn;
 		private Connection mySummandAInverted, mySummandBInverted, myCarryInInverted;
+		private Connection mySummandAExtended, mySummandBExtended, myCarryInExtended;
 		
 		private Connection myCarryOut, mySumOut, myZeroOut;
 		private AndGate[] myAndGates;
 		private OrGate myCarryGate, mySumGate;
 		
 		private NotGate[] myNotGates;
+		private Junction[] myExtenders;
 		
 		public FullAdder(Connection theSummandA, Connection theSummandB, Connection theCarryIn) {
-			mySummandA = theSummandA;
-			mySummandB = theSummandB;
-			myCarryIn = theCarryIn;
+			Junction aJunction = new Junction(theSummandA);
+			Junction bJunction = new Junction(theSummandB);
+			Junction carryJunction = new Junction(theCarryIn);
+			mySummandA = aJunction.getOutput();
+			mySummandB = bJunction.getOutput();
+			myCarryIn = carryJunction.getOutput();
 			
 			//Eight AND Gates for the eight unique combinations of A, B, and Carry-In
 			myAndGates = new AndGate[8];
 			//Three NOT Gates for inverting A, B, and Carry-In
 			myNotGates = new NotGate[3];
+			myExtenders = new Junction[3];
 			
 			setupInverts();
+			setupExtenders();
 			setupGates();
 			setupOutputs();
 		}
@@ -54,6 +62,16 @@ public class FullAdder {
 			myCarryInInverted = myNotGates[2].getOutput();
 		}
 		
+		private void setupExtenders() {
+			myExtenders[0] = new Junction(mySummandA);
+			myExtenders[1] = new Junction(mySummandB);
+			myExtenders[2] = new Junction(myCarryIn);
+			
+			mySummandAExtended = myExtenders[0].getOutput();
+			mySummandBExtended = myExtenders[1].getOutput();
+			myCarryInExtended = myExtenders[2].getOutput();
+		}
+		
 		/*
 		 * Set up each of the eight AND Gates.
 		 * Each Gate contains either the inverted or normal path of all three inputs.
@@ -67,21 +85,21 @@ public class FullAdder {
 				if(i < 4) {
 					connectionGroups[i][0] = mySummandAInverted;
 				} else {
-					connectionGroups[i][0] = mySummandA;
+					connectionGroups[i][0] = mySummandAExtended;
 				}
 				
 				//Every two gates receive the inverted B.
 				if(i == 0 | i == 1 | i == 4 | i == 5) {
 					connectionGroups[i][1] = mySummandBInverted;
 				} else {
-					connectionGroups[i][1] = mySummandB;
+					connectionGroups[i][1] = mySummandBExtended;
 				}
 				
 				//Every other gate receives the inverted carry-in.
 				if(i % 2 == 0) {
 					connectionGroups[i][2] = myCarryInInverted;
 				} else {
-					connectionGroups[i][2] = myCarryIn;
+					connectionGroups[i][2] = myCarryInExtended;
 				}
 				
 				myAndGates[i] = new AndGate(connectionGroups[i]);

@@ -19,11 +19,11 @@ public class FiniteStateMachine {
 		myClock = new Clock();
 		NotGate clockInverter = new NotGate(myClock.getOutput());
 		
-		RippleCounter myCounter = new RippleCounter(myClock.getOutput(), 2);
+		RippleCounter myCounter = new RippleCounter(myClock.getOutput(), 4);
 		Decoder myDecoder = new Decoder(myCounter.getOutputConnections());
 		
-		AndGate[] decoderBuffers = new AndGate[4];
-		Connection[] bufferGroup = new Connection[4];
+		AndGate[] decoderBuffers = new AndGate[16];
+		Connection[] bufferGroup = new Connection[16];
 		for(int i = 0; i < 4; i++) {
 			try {
 				Thread.sleep(1);

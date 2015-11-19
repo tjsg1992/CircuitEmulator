@@ -33,6 +33,8 @@ public class Junction implements Connectable {
 		Connection[] input = {theConnection};
 		this.inputConnections = input;
 		myOutputConnection = new Connection();
+		
+		theConnection.connectOutputTo(this);
 		update();
 	}
 	
