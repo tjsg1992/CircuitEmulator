@@ -14,11 +14,7 @@ public class ETDFlipFlop {
 	
 	public ETDFlipFlop(Connection theData, Connection theClock) {
 		myData = theData;
-		myClock = theClock;
-		
-		myData.initializeThread(0);
-		myClock.initializeThread(0);
-		
+		myClock = theClock;		
 		setupGates();
 	}
 	
@@ -57,19 +53,10 @@ public class ETDFlipFlop {
 			myNandGates[i].getOutput().connectOutputTo(myNandGateOutputs[i]);
 		}
 		
-		myNandGates[0].getOutput().powerOff();
-		myNandGates[1].getOutput().powerOn();
-		myNandGates[2].getOutput().powerOn();
-		myNandGates[3].getOutput().powerOn();
 		myNandGates[4].getOutput().powerOff();
-		myNandGates[5].getOutput().powerOn();
 		
 		myOutputA = myNandGates[4].getOutput();
-		myOutputB = myNandGates[5].getOutput();
-		
-		myNandGates[1].getOutput().initializeThread(0);
-		myNandGates[2].getOutput().initializeThread(0);
-		
+		myOutputB = myNandGates[5].getOutput();		
 	}
 	
 	public Connection getOutputA() {
