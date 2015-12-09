@@ -35,7 +35,8 @@ public class MemoryArray {
 	 * @param theDecoderConnections the lines from a decoder to switch registers
 	 * @param theWE the write-enable line, which can be powered on to write the inputs to the current register
 	 */
-	public MemoryArray(Connection[] theInputConnections, Connection[] theDecoderConnections, Connection theWE) {
+	public MemoryArray(Connection[] theInputConnections,
+			Connection[] theDecoderConnections, Connection theWE) {
 		
 		myInputs = theInputConnections;
 		myWE = theWE;

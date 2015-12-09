@@ -31,6 +31,8 @@ public class MemoryLoader {
 		}
 		
 		myInputs = theInputs;
+		myDecoderInputs = theDecoderInputs;
+		myWE = theWE;
 		myFile = new File(theFileName);
 		
 		if(!myFile.exists() || myFile.isDirectory()) { 
