@@ -25,12 +25,6 @@ public class FiniteStateMachine {
 		AndGate[] decoderBuffers = new AndGate[16];
 		Connection[] bufferGroup = new Connection[16];
 		for(int i = 0; i < 4; i++) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			Connection[] andGateGroup = {clockInverter.getOutput(), myDecoder.getOutputConnections()[i]};
 			decoderBuffers[i] = new AndGate(andGateGroup);
 			bufferGroup[i] = decoderBuffers[i].getOutput();
@@ -55,6 +49,10 @@ public class FiniteStateMachine {
 	
 	public Connection getMDRLoad() {
 		return myOutputs[2];
+	}
+	
+	public Connection getIRLoad() {
+		return myOutputs[3];
 	}
 	
 	public void start() {

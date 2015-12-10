@@ -9,7 +9,7 @@ import circuit.storage.MemoryArray;
 import circuit.storage.Register;
 
 public class LC3 {
-	static final int MEMORY_SIZE = 8;
+	static final int MEMORY_SIZE = 10;
 	static final int WORD_SIZE = 16;
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
@@ -69,7 +69,10 @@ public class LC3 {
 		GatedRegister memoryDataRegister = 
 				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());
 		
-		myOutputConnections = memoryDataRegister.getOutputConnections();
+		Register instructionRegister =
+				new Register(memoryDataRegister.getOutputConnections(), myStateMachine.getIRLoad());
+		
+		myOutputConnections = instructionRegister.getOutputConnections();
 		adderConnections[0].powerOn();
 		myStateMachine.start();
 	}
