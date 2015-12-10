@@ -44,7 +44,6 @@ public class MemoryArray {
 		registerSize = theInputConnections.length;
 		numRegisters = (int) Math.pow(2, theDecoderConnections.length); 
 		
-		
 		myAddressDecoder = new Decoder(theDecoderConnections);
 		combineDecoderAndWE();
 		setupRegisters();

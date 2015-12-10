@@ -1,13 +1,15 @@
 package processor.lc3;
 
+import main.MemoryLoader;
 import transistor.Connection;
 import transistor.Junction;
 import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
+import circuit.storage.MemoryArray;
 import circuit.storage.Register;
 
 public class LC3 {
-	static final int WORD_SIZE = 16;
+	static final int WORD_SIZE = 8;
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
 	
@@ -37,18 +39,36 @@ public class LC3 {
 		}
 		
 		
-
 		GatedRegister programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
-		
+
 		for(int i = 0; i < WORD_SIZE; i++) {
 			inputJunctions[i].setInput(counterIncrement.getOutputSums()[i]);
 			counterIncrement.getOutputSums()[i].connectOutputTo(inputJunctions[i]);
 		}
-		
+
 		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());
 		Register memoryAddressRegister = new Register(gatePC.getOutputConnections(), myStateMachine.getMARLoad());
-		myOutputConnections = programCounter.getOutputConnections();
+
+		Connection[] memoryInputs = new Connection[WORD_SIZE];
+		for(int i = 0; i < WORD_SIZE; i++) {
+			memoryInputs[i] = new Connection();
+		}
+		Connection memoryWE = new Connection();
+		
+		MemoryArray memory = new MemoryArray(memoryInputs,
+				memoryAddressRegister.getOutputConnections(), memoryWE);
+		
+		MemoryLoader loader = new MemoryLoader(memoryInputs,
+				memoryAddressRegister.getOutputConnections(), memoryWE,
+				"memory-load-test1.txt");
+		
+		loader.loadMemory();
+		
+		GatedRegister memoryDataRegister = 
+				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());
+		
+		myOutputConnections = memoryDataRegister.getOutputConnections();
 		adderConnections[0].powerOn();
 		myStateMachine.start();
 	}

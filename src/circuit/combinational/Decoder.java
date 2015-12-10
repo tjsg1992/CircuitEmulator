@@ -41,7 +41,7 @@ public class Decoder {
 		//Normal and inverted paths are then put into various groups, such that
 		//each group has one of either for each input, and whose assortment is unique.
 		Connection[][] connectionGroups = groupConnections(theInputConnections, inputInverts);
-		
+
 		//The groups of connections are then connected to AND gates.
 		myOutputConnections = setupGates(connectionGroups);
 	}
@@ -101,7 +101,6 @@ public class Decoder {
 			switchCount /= 2;
 			switchCountdown = switchCount;
 			invertFlag = true;
-			
 			for(int j = 0; j < numInputsSquared; j++) {
 				if(switchCountdown == 0) {
 					//Switch from inverted to normal, or normal to inverted
@@ -129,7 +128,7 @@ public class Decoder {
 	 */
 	private Connection[] setupGates(Connection[][] theConnectionGroups) {
 		Connection[] gateOutputs = new Connection[theConnectionGroups.length];
-		
+
 		for(int i = 0; i < theConnectionGroups.length; i++) {
 			AndGate andGate = new AndGate(theConnectionGroups[i]);
 			gateOutputs[i] = andGate.getOutput();
