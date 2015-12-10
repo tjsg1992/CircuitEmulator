@@ -9,7 +9,8 @@ import circuit.storage.MemoryArray;
 import circuit.storage.Register;
 
 public class LC3 {
-	static final int WORD_SIZE = 8;
+	static final int MEMORY_SIZE = 8;
+	static final int WORD_SIZE = 16;
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
 	
@@ -26,12 +27,12 @@ public class LC3 {
 	 */
 	
 	private void loadRegisters() {
-		Connection[] counterConnections = new Connection[WORD_SIZE];
-		Connection[] adderConnections = new Connection[WORD_SIZE];
-		Junction[] inputJunctions = new Junction[WORD_SIZE];
-		Connection[] junctionOutputs = new Connection[WORD_SIZE];
+		Connection[] counterConnections = new Connection[MEMORY_SIZE];
+		Connection[] adderConnections = new Connection[MEMORY_SIZE];
+		Junction[] inputJunctions = new Junction[MEMORY_SIZE];
+		Connection[] junctionOutputs = new Connection[MEMORY_SIZE];
 		
-		for(int i = 0; i < WORD_SIZE; i++) {
+		for(int i = 0; i < MEMORY_SIZE; i++) {
 			counterConnections[i] = new Connection();
 			adderConnections[i] = new Connection();
 			inputJunctions[i] = new Junction(new Connection());
@@ -42,7 +43,7 @@ public class LC3 {
 		GatedRegister programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
 
-		for(int i = 0; i < WORD_SIZE; i++) {
+		for(int i = 0; i < MEMORY_SIZE; i++) {
 			inputJunctions[i].setInput(counterIncrement.getOutputSums()[i]);
 			counterIncrement.getOutputSums()[i].connectOutputTo(inputJunctions[i]);
 		}
@@ -61,7 +62,7 @@ public class LC3 {
 		
 		MemoryLoader loader = new MemoryLoader(memoryInputs,
 				memoryAddressRegister.getOutputConnections(), memoryWE,
-				"memory-load-test1.txt");
+				"memory-load.txt");
 		
 		loader.loadMemory();
 		
