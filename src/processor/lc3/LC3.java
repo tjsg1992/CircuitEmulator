@@ -9,24 +9,25 @@ import circuit.storage.MemoryArray;
 import circuit.storage.Register;
 
 public class LC3 {
-	static final int MEMORY_SIZE = 10;
+	static final int MEMORY_SIZE = 8;
 	static final int WORD_SIZE = 16;
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
+	private Register[] myRegisters;
+	
+	Register myInstructionRegister;
 	
 	public LC3() {
 		myStateMachine = new FiniteStateMachine();
-		loadRegisters();
-		
-		
-		
+		initialize();		
+		setupRegisters();
 	}
 	
 	/*
 	 * Step 1: Load the MAR with the contents of the PC, and increment the PC by 1.
 	 */
 	
-	private void loadRegisters() {
+	private void initialize() {
 		Connection[] counterConnections = new Connection[MEMORY_SIZE];
 		Connection[] adderConnections = new Connection[MEMORY_SIZE];
 		Junction[] inputJunctions = new Junction[MEMORY_SIZE];
@@ -69,16 +70,27 @@ public class LC3 {
 		GatedRegister memoryDataRegister = 
 				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());
 		
-		Register instructionRegister =
+		myInstructionRegister =
 				new Register(memoryDataRegister.getOutputConnections(), myStateMachine.getIRLoad());
 		
-		myOutputConnections = instructionRegister.getOutputConnections();
+		myStateMachine.setupInstructionHandler(myInstructionRegister);
+		
+		myOutputConnections = myInstructionRegister.getOutputConnections();
 		adderConnections[0].powerOn();
 		myStateMachine.start();
 	}
 	
+	private void setupRegisters() {
+		myRegisters = new Register[8];
+		//TODO
+	}
+	
 	public Connection[] getCurrentOutput() {
 		return myOutputConnections;
+	}
+	
+	protected Register getInstructionRegsiter() {
+		return myInstructionRegister;
 	}
 
 }

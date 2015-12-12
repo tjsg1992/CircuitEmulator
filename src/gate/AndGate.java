@@ -23,6 +23,12 @@ public class AndGate extends Gate {
 		update();
 	}
 
+	public AndGate(Connection input1, Connection input2) {
+		super(input1, input2);
+		setupGate();
+		update();
+	}
+
 	/*
 	 * An AND Gate functions by inverting the output of a NAND Gate
 	 * with a NOT Gate.

@@ -37,6 +37,11 @@ public abstract class Gate {
 		this.myInputConnections = theInputConnections;
 	}
 	
+	protected Gate(Connection input1, Connection input2) {
+		Connection[] inputs = {input1, input2};
+		this.myInputConnections = inputs;
+	}
+	
 	/**
 	 * Refresh the Gate, which may update its output.
 	 */
