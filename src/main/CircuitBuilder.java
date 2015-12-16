@@ -11,7 +11,7 @@ public class CircuitBuilder {
 		while(true)
 		try {
 			Thread.sleep(1);
-			//printOutputs(myLC3.getCurrentOutput());
+			printOutputs(myLC3.getCurrentOutput());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

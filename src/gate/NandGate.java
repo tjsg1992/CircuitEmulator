@@ -43,7 +43,6 @@ public class NandGate extends Gate {
 		
 		//Create a group of transistors.
 		transistors = new Transistor[super.numOfInputs()];
-		
 		for(int i = 0; i < super.numOfInputs(); i++) {
 			transistors[i] = new PTypeTransistor(mySource, super.getInputConnections()[i]);
 		}

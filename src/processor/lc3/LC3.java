@@ -1,19 +1,29 @@
 package processor.lc3;
 
+import gate.AndGate;
 import main.MemoryLoader;
 import transistor.Connection;
 import transistor.Junction;
+import circuit.combinational.Decoder;
+import circuit.combinational.FullAdder;
+import circuit.combinational.Multiplexer;
 import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
 import circuit.storage.MemoryArray;
 import circuit.storage.Register;
 
 public class LC3 {
-	static final int MEMORY_SIZE = 8;
+	static final int MEMORY_SIZE = 10;
 	static final int WORD_SIZE = 16;
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
 	private Register[] myRegisters;
+	
+	private Junction[] myRegisterInputs;
+	private Connection[] mySR1Outputs;
+	private Connection[] mySR2Outputs;
+	
+	private RippleAdder myRegisterAdder;
 	
 	Register myInstructionRegister;
 	
@@ -21,6 +31,9 @@ public class LC3 {
 		myStateMachine = new FiniteStateMachine();
 		initialize();		
 		setupRegisters();
+		setupRegisterAdder();
+		myOutputConnections = myRegisters[2].getOutputConnections();
+		myStateMachine.start();
 	}
 	
 	/*
@@ -75,14 +88,69 @@ public class LC3 {
 		
 		myStateMachine.setupInstructionHandler(myInstructionRegister);
 		
-		myOutputConnections = myInstructionRegister.getOutputConnections();
 		adderConnections[0].powerOn();
-		myStateMachine.start();
 	}
 	
 	private void setupRegisters() {
 		myRegisters = new Register[8];
-		//TODO
+		myRegisterInputs = new Junction[16];
+		Connection[] inputConnections = new Connection[16];
+		Connection[] regWrites = new Connection[8];
+		
+		Decoder destDecoder = new Decoder(myStateMachine.getDRSelects());
+		
+		for(int i = 0; i < 16; i++) {
+			myRegisterInputs[i] = new Junction(new Connection());
+			inputConnections[i] = myRegisterInputs[i].getOutput();
+		}
+		
+		for(int i = 0; i < 8; i++) {
+			AndGate weGate = new AndGate(destDecoder.getOutputConnections()[i], myStateMachine.getREGLoad());
+			regWrites[i] = weGate.getOutput();
+			myRegisters[i] = new Register(inputConnections, regWrites[i]);
+		}
+
+		Connection[][] sr1Groups = new Connection[16][8];
+		Connection[][] sr2Groups = new Connection[16][8];
+		Connection[][] drGroups = new Connection[16][8];
+		
+		for(int i = 0; i < 16; i++) {
+			for(int j = 0; j < 8; j++) {
+				sr1Groups[i][j] = myRegisters[j].getOutputConnections()[i];
+				sr2Groups[i][j] = myRegisters[j].getOutputConnections()[i];
+				drGroups[i][j] = myRegisters[j].getOutputConnections()[i];
+			}
+		}
+		
+		Multiplexer[] sr1Muxes = new Multiplexer[16];
+		Multiplexer[] sr2Muxes = new Multiplexer[16];
+		
+		mySR1Outputs = new Connection[16];
+		mySR2Outputs = new Connection[16];
+		
+		for(int i = 0; i < 16; i++) {
+			sr1Muxes[i] = new Multiplexer(sr1Groups[i], myStateMachine.getSR1Selects());
+			sr2Muxes[i] = new Multiplexer(sr2Groups[i], myStateMachine.getSR2Selects());
+			
+			mySR1Outputs[i] = sr1Muxes[i].getOutput();
+			mySR2Outputs[i] = sr2Muxes[i].getOutput();
+		}
+		
+		//Testng
+		inputConnections[0].powerOn();
+		regWrites[0].powerOn();
+		regWrites[0].powerOff();	
+		inputConnections[0].powerOff();
+	}
+	
+	private void setupRegisterAdder() {
+		myRegisterAdder = new RippleAdder(mySR1Outputs, mySR2Outputs);
+		GatedRegister gateALU = new GatedRegister(myRegisterAdder.getOutputSums(), myStateMachine.getALULoad());
+		
+		for(int i = 0; i < 16; i++) {
+			myRegisterInputs[i].setInput(gateALU.getOutputConnections()[i]);
+			gateALU.getOutputConnections()[i].connectOutputTo(myRegisterInputs[i]);
+		}
 	}
 	
 	public Connection[] getCurrentOutput() {
