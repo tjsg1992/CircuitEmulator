@@ -20,18 +20,19 @@ public class FiniteStateMachine {
 	private Connection myAddConnection;
 	private Connection myRegLoadConnection;
 	
-	private RippleCounter haltCounter;
-	private Decoder haltDecoder;
-	
 	public FiniteStateMachine() {
-		myClock = new Clock();
-		NotGate clockInverter = new NotGate(myClock.getOutput());
-		
+		setClock(new Clock());
+	}
+	
+	public void setClock(Clock theClock) {
+		this.myClock = theClock;		
 		RippleCounter myCounter = new RippleCounter(myClock.getOutput(), 6);
 		Decoder myDecoder = new Decoder(myCounter.getOutputConnections());
 		
 		AndGate[] decoderBuffers = new AndGate[16];
 		Connection[] bufferGroup = new Connection[16];
+		NotGate clockInverter = new NotGate(myClock.getOutput());
+		
 		for(int i = 0; i < 6; i++) {
 			Connection[] andGateGroup = {clockInverter.getOutput(), myDecoder.getOutputConnections()[i]};
 			decoderBuffers[i] = new AndGate(andGateGroup);
@@ -39,12 +40,6 @@ public class FiniteStateMachine {
 		}
 		
 		myOutputs = bufferGroup;
-		
-		haltCounter = new RippleCounter(myOutputs[3], 4);
-		haltDecoder = new Decoder(haltCounter.getOutputConnections());
-		
-		//myClock.setHaltLine(myOutputs[3]);
-		//myClock.setHaltLine(haltDecoder.getOutputConnections()[4]);
 	}
 	
 	public void setupInstructionHandler(Register instructionRegister) {

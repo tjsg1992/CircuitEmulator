@@ -11,28 +11,24 @@ import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
 import circuit.storage.MemoryArray;
 import circuit.storage.Register;
+import circuit.storage.RegisterFile;
 
 public class LC3 {
-	static final int MEMORY_SIZE = 10;
-	static final int WORD_SIZE = 16;
+	public static final int MEMORY_SIZE = 10;
+	public static final int WORD_SIZE = 16;
+	
 	private FiniteStateMachine myStateMachine;
 	private Connection[] myOutputConnections;
-	private Register[] myRegisters;
 	
-	private Junction[] myRegisterInputs;
-	private Connection[] mySR1Outputs;
-	private Connection[] mySR2Outputs;
-	
-	private RippleAdder myRegisterAdder;
-	
-	Register myInstructionRegister;
+	private RippleAdder myRegisterAdder;	
+	private Register myInstructionRegister;
+	private RegisterFile myRegisterFile;
 	
 	public LC3() {
 		myStateMachine = new FiniteStateMachine();
-		initialize();		
-		setupRegisters();
+		initialize();
 		setupRegisterAdder();
-		myOutputConnections = myRegisters[2].getOutputConnections();
+		myOutputConnections = myRegisterFile.getOutputConnections();
 		myStateMachine.start();
 	}
 	
@@ -89,68 +85,31 @@ public class LC3 {
 		myStateMachine.setupInstructionHandler(myInstructionRegister);
 		
 		adderConnections[0].powerOn();
-	}
-	
-	private void setupRegisters() {
-		myRegisters = new Register[8];
-		myRegisterInputs = new Junction[16];
-		Connection[] inputConnections = new Connection[16];
-		Connection[] regWrites = new Connection[8];
 		
-		Decoder destDecoder = new Decoder(myStateMachine.getDRSelects());
-		
-		for(int i = 0; i < 16; i++) {
-			myRegisterInputs[i] = new Junction(new Connection());
-			inputConnections[i] = myRegisterInputs[i].getOutput();
-		}
-		
-		for(int i = 0; i < 8; i++) {
-			AndGate weGate = new AndGate(destDecoder.getOutputConnections()[i], myStateMachine.getREGLoad());
-			regWrites[i] = weGate.getOutput();
-			myRegisters[i] = new Register(inputConnections, regWrites[i]);
-		}
-
-		Connection[][] sr1Groups = new Connection[16][8];
-		Connection[][] sr2Groups = new Connection[16][8];
-		Connection[][] drGroups = new Connection[16][8];
-		
-		for(int i = 0; i < 16; i++) {
-			for(int j = 0; j < 8; j++) {
-				sr1Groups[i][j] = myRegisters[j].getOutputConnections()[i];
-				sr2Groups[i][j] = myRegisters[j].getOutputConnections()[i];
-				drGroups[i][j] = myRegisters[j].getOutputConnections()[i];
-			}
-		}
-		
-		Multiplexer[] sr1Muxes = new Multiplexer[16];
-		Multiplexer[] sr2Muxes = new Multiplexer[16];
-		
-		mySR1Outputs = new Connection[16];
-		mySR2Outputs = new Connection[16];
-		
-		for(int i = 0; i < 16; i++) {
-			sr1Muxes[i] = new Multiplexer(sr1Groups[i], myStateMachine.getSR1Selects());
-			sr2Muxes[i] = new Multiplexer(sr2Groups[i], myStateMachine.getSR2Selects());
-			
-			mySR1Outputs[i] = sr1Muxes[i].getOutput();
-			mySR2Outputs[i] = sr2Muxes[i].getOutput();
-		}
-		
-		//Testng
-		inputConnections[0].powerOn();
-		regWrites[0].powerOn();
-		regWrites[0].powerOff();	
-		inputConnections[0].powerOff();
+		myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
+				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
 	}
 	
 	private void setupRegisterAdder() {
-		myRegisterAdder = new RippleAdder(mySR1Outputs, mySR2Outputs);
+		myRegisterAdder = new RippleAdder(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs());
 		GatedRegister gateALU = new GatedRegister(myRegisterAdder.getOutputSums(), myStateMachine.getALULoad());
 		
 		for(int i = 0; i < 16; i++) {
-			myRegisterInputs[i].setInput(gateALU.getOutputConnections()[i]);
-			gateALU.getOutputConnections()[i].connectOutputTo(myRegisterInputs[i]);
+			myRegisterFile.getRegisterInputs()[i].setInput(gateALU.getOutputConnections()[i]);
+			gateALU.getOutputConnections()[i].connectOutputTo(myRegisterFile.getRegisterInputs()[i]);
 		}
+	}
+	
+	public void initializeMemory() {
+		
+	}
+	
+	public void initializeControlUnit() {
+		
+	}
+	
+	public void initializeProcessingUnit() {
+		
 	}
 	
 	public Connection[] getCurrentOutput() {
