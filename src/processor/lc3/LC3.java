@@ -18,25 +18,49 @@ public class LC3 {
 	public static final int WORD_SIZE = 16;
 	
 	private FiniteStateMachine myStateMachine;
-	private Connection[] myOutputConnections;
-	
-	private RippleAdder myRegisterAdder;	
-	private Register myInstructionRegister;
-	private RegisterFile myRegisterFile;
+	private ProcessorBus myBus;	
+	private Connection[] myOutputConnections; //TEST OUTPUT
 	
 	public LC3() {
+		myBus = new ProcessorBus();
 		myStateMachine = new FiniteStateMachine();
-		initialize();
-		setupRegisterAdder();
-		myOutputConnections = myRegisterFile.getOutputConnections();
+		
+		setupProgramCounter();
+		setupMemory();		
+		Register instructionRegister =
+				new Register(myBus.getGateMDROutputs(), myStateMachine.getIRLoad());
+		myStateMachine.setupInstructionHandler(instructionRegister);		
+		setupProcessingUnit();
+		
 		myStateMachine.start();
 	}
 	
-	/*
-	 * Step 1: Load the MAR with the contents of the PC, and increment the PC by 1.
-	 */
+	private void setupMemory() {
+		Register memoryAddressRegister = new Register(myBus.getGatePCOutputs(), myStateMachine.getMARLoad());
+		
+		Connection[] memoryInputs = new Connection[WORD_SIZE];
+		for(int i = 0; i < WORD_SIZE; i++) {
+			memoryInputs[i] = new Connection();
+		}
+		Connection memoryWE = new Connection();
+		
+		MemoryArray memory = new MemoryArray(memoryInputs,
+				memoryAddressRegister.getOutputConnections(), memoryWE);
+		
+
+		
+		GatedRegister memoryDataRegister = 
+				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());
+		
+		myBus.setGateMDROutputs(memoryDataRegister.getOutputConnections());
+		
+		MemoryLoader loader = new MemoryLoader(memoryInputs,
+				memoryAddressRegister.getOutputConnections(), memoryWE,
+				"memory-load.txt");
+		loader.loadMemory();
+	}
 	
-	private void initialize() {
+	private void setupProgramCounter() {
 		Connection[] counterConnections = new Connection[MEMORY_SIZE];
 		Connection[] adderConnections = new Connection[MEMORY_SIZE];
 		Junction[] inputJunctions = new Junction[MEMORY_SIZE];
@@ -49,7 +73,6 @@ public class LC3 {
 			junctionOutputs[i] = inputJunctions[i].getOutput();
 		}
 		
-		
 		GatedRegister programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
 
@@ -59,65 +82,31 @@ public class LC3 {
 		}
 
 		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());
-		Register memoryAddressRegister = new Register(gatePC.getOutputConnections(), myStateMachine.getMARLoad());
-
-		Connection[] memoryInputs = new Connection[WORD_SIZE];
-		for(int i = 0; i < WORD_SIZE; i++) {
-			memoryInputs[i] = new Connection();
-		}
-		Connection memoryWE = new Connection();
-		
-		MemoryArray memory = new MemoryArray(memoryInputs,
-				memoryAddressRegister.getOutputConnections(), memoryWE);
-		
-		MemoryLoader loader = new MemoryLoader(memoryInputs,
-				memoryAddressRegister.getOutputConnections(), memoryWE,
-				"memory-load.txt");
-		
-		loader.loadMemory();
-		
-		GatedRegister memoryDataRegister = 
-				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());
-		
-		myInstructionRegister =
-				new Register(memoryDataRegister.getOutputConnections(), myStateMachine.getIRLoad());
-		
-		myStateMachine.setupInstructionHandler(myInstructionRegister);
+		myBus.setGatePCOutputs(gatePC.getOutputConnections());
 		
 		adderConnections[0].powerOn();
-		
-		myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
-				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
 	}
 	
-	private void setupRegisterAdder() {
-		myRegisterAdder = new RippleAdder(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs());
+	private void setupProcessingUnit() {
+		RegisterFile myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
+				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
+		
+		RippleAdder myRegisterAdder = new RippleAdder(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs());
 		GatedRegister gateALU = new GatedRegister(myRegisterAdder.getOutputSums(), myStateMachine.getALULoad());
 		
 		for(int i = 0; i < 16; i++) {
 			myRegisterFile.getRegisterInputs()[i].setInput(gateALU.getOutputConnections()[i]);
 			gateALU.getOutputConnections()[i].connectOutputTo(myRegisterFile.getRegisterInputs()[i]);
 		}
-	}
-	
-	public void initializeMemory() {
 		
+		myOutputConnections = myRegisterFile.getOutputConnections(); //TEST OUTPUT
 	}
 	
-	public void initializeControlUnit() {
-		
-	}
-	
-	public void initializeProcessingUnit() {
-		
-	}
-	
+	/**
+	 * TEST OUTPUT
+	 */
 	public Connection[] getCurrentOutput() {
 		return myOutputConnections;
-	}
-	
-	protected Register getInstructionRegsiter() {
-		return myInstructionRegister;
 	}
 
 }
