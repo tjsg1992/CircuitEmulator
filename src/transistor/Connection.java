@@ -102,9 +102,7 @@ public class Connection implements Connectable {
 			}
 		}
 		
-		if(!ConnectionManager.INSTANCE.isReading()) {
-			ConnectionManager.INSTANCE.readRequests();
-		}
+		ConnectionManager.INSTANCE.readRequests();
 		
 				
 	}
