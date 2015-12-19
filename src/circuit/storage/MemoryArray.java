@@ -5,6 +5,14 @@ import gate.OrGate;
 import circuit.combinational.Decoder;
 import transistor.Connection;
 
+/**
+ * A Memory Array is an (often) large collection of registers.<br>
+ * Set up to only read from or write to one register at a time.<br>
+ * Use RegisterFile to read from two registers at once.
+ *
+ * @author Taylor Gorman
+ * @version 1.0, Dec 19, 2015
+ */
 public class MemoryArray {
 	private Connection myWE;
 	private Decoder myAddressDecoder;

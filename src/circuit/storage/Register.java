@@ -2,6 +2,13 @@ package circuit.storage;
 
 import transistor.Connection;
 
+/**
+ * 
+ *
+ * @author Taylor Gorman
+ * @version 1.0, Dec 19, 2015
+ *
+ */
 public class Register {
 	private Connection[] myInputConnections;
 	private Connection[] myOutputConnections;

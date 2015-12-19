@@ -21,9 +21,7 @@ public class TFlipFlop {
 	
 	public TFlipFlop(Connection theClock, Connection theToggle) {
 		myClock = theClock;
-		//myClock.initializeThread(0);
 		myToggle = theToggle;
-		//myToggle.initializeThread(0);
 		myToggleInverter = new NotGate(myToggle);
 		
 		Connection[] dummyGroup = {new Connection()};
