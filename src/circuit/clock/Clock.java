@@ -22,8 +22,6 @@ public class Clock extends Thread {
 		myClock = new Connection();
 		Connection[] haltGateGroup = {myHaltInverter.getOutput(), myClock};
 		myHaltGate = new AndGate(haltGateGroup);
-		
-		myClock.initializeThread(0);
 		nextTime = System.currentTimeMillis() - System.currentTimeMillis() % CLOCK_SPEED + CLOCK_SPEED;
 	}
 	
