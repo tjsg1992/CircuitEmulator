@@ -30,20 +30,7 @@ public class RippleCounter {
 			myOutputConnections[i] = myLatches[i].getOutputA();
 		}
 		
-		try {
-			Thread.sleep(0, 5);
-			myToggle.powerOn();				
-			
-			Thread.sleep(0, 5);		
-			myLatches[0].getOutputB().powerOn();		
-			Thread.sleep(0, 5);		
-			myLatches[0].getOutputB().powerOff();		
-			Thread.sleep(0, 5);
-			myLatches[0].getOutputB().powerOn();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		myToggle.powerOn();	
 		
 	}
 	

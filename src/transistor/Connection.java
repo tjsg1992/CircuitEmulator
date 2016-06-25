@@ -18,11 +18,8 @@ public class Connection implements Connectable {
 	
 	//True if the connection has power
 	private boolean power;
-	
 	//A Connection may have multiple transistors and junctions that it connects to.
 	private ArrayList<Connectable> myOutputConnectables;
-	//private ThreadConnection myThread;
-	private int myThreadDelay;
 	
 	/**
 	 * Construct a Connection that is powered off and with not connected
@@ -38,13 +35,6 @@ public class Connection implements Connectable {
 		myOutputConnectables.add(theOtherConnectable);
 		update();
 	}
-	
-	
-	public void initializeThread(int theDelay) {
-//		myThreadDelay = theDelay;
-//		myThread = new ThreadConnection(this, myThreadDelay);
-//		myThread.start();
-	}
 
 
 	/**
@@ -52,14 +42,7 @@ public class Connection implements Connectable {
 	 */
 	public void powerOn() {
 		if(power) return; //Already powered. Return to stop update chain.
-		power = true;
-		
-//		if(myThread != null) {
-//			initializeThread(myThreadDelay);
-//		} else {
-//			update();
-//		}	
-		
+		power = true;		
 		update();
 		
 	}
@@ -69,15 +52,7 @@ public class Connection implements Connectable {
 	 */
 	public void powerOff() {
 		if(!power) return; //Already unpowered. Return to stop update chain.
-		
-		power = false;
-		
-//		if(myThread != null) {
-//			initializeThread(myThreadDelay);
-//		} else {
-//			update();
-//		}	
-		
+		power = false;		
 		update();
 	}
 	
