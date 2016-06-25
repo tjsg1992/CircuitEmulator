@@ -114,10 +114,9 @@ public class LC3 {
 		RegisterFile myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
 				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
 		
-		//ALU currently only adds the SR1 and SR2 together.
-		RippleAdder alu = new RippleAdder(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs());
+		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs(), myStateMachine.getALUK());
 		//GateALU contains the last ALU output and connects it to the bus.
-		GatedRegister gateALU = new GatedRegister(alu.getOutputSums(), myStateMachine.getALULoad());
+		GatedRegister gateALU = new GatedRegister(alu.getOutputs(), myStateMachine.getALULoad());
 		myBus.setGateALUOutputs(gateALU.getOutputConnections());
 		
 		//Connect the Register File inputs to the GateALU outputs from the bus.

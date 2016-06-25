@@ -22,7 +22,7 @@ public class CircuitBuilder {
 	}
 	
 	private static void printOutputs(Connection[] theOutputs) {
-		for(int i = 0; i < 16; i++) {
+		for(int i = 15; i >= 0; i--) {
 			if(theOutputs[i].hasPower()) {
 				System.out.print("1");
 			} else {
