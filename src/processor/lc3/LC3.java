@@ -3,6 +3,8 @@ package processor.lc3;
 import main.MemoryLoader;
 import transistor.Connection;
 import transistor.Junction;
+import circuit.combinational.Extender;
+import circuit.combinational.Multiplexer;
 import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
 import circuit.storage.MemoryArray;
@@ -114,7 +116,23 @@ public class LC3 {
 		RegisterFile myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
 				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
 		
-		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), myRegisterFile.getSR2Outputs(), myStateMachine.getALUK());
+		Extender imm5Extender = new Extender(myStateMachine.getImm5Lines(), WORD_SIZE, false);
+		//Apparently at some point the registers needed to be flipped.
+		Connection[] extenderReversed = new Connection[WORD_SIZE];
+		for (int i = 0; i < WORD_SIZE; i++) {
+			extenderReversed[i] = imm5Extender.getOutputs()[WORD_SIZE - (i + 1)];
+		}
+		
+		Multiplexer[] inputBMuxes = new Multiplexer[WORD_SIZE];
+		Connection[] inputBLines = new Connection[WORD_SIZE];
+		for (int i = 0; i < WORD_SIZE; i++) {
+			Connection[] muxInputs = {myRegisterFile.getSR2Outputs()[i], extenderReversed[i]};
+			Connection[] selectLine = {myStateMachine.getImmediateSelect()};
+			inputBMuxes[i] = new Multiplexer(muxInputs, selectLine);
+			inputBLines[i] = inputBMuxes[i].getOutput();
+		}
+		
+		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), inputBLines, myStateMachine.getALUK());
 		//GateALU contains the last ALU output and connects it to the bus.
 		GatedRegister gateALU = new GatedRegister(alu.getOutputs(), myStateMachine.getALULoad());
 		myBus.setGateALUOutputs(gateALU.getOutputConnections());
