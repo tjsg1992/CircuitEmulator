@@ -4,7 +4,10 @@ import main.MemoryLoader;
 import transistor.Connection;
 import transistor.Junction;
 import circuit.combinational.Extender;
+import circuit.combinational.FullAdder;
 import circuit.combinational.Multiplexer;
+import circuit.combinational.MultiplexerArray;
+import circuit.combinational.Reverser;
 import circuit.combinational.RippleAdder;
 import circuit.storage.GatedRegister;
 import circuit.storage.MemoryArray;
@@ -23,6 +26,7 @@ public class LC3 {
 	
 	private FiniteStateMachine myStateMachine;
 	private ProcessorBus myBus;	
+	private GatedRegister programCounter;
 	private Connection[] myOutputConnections; //TEST OUTPUT
 	
 	/**
@@ -38,6 +42,7 @@ public class LC3 {
 				new Register(myBus.getGateMDROutputs(), myStateMachine.getIRLoad());
 		myStateMachine.setupInstructionHandler(instructionRegister);		
 		setupProcessingUnit();
+		setupAddressAdder();
 		
 		myStateMachine.start();
 	}
@@ -95,7 +100,7 @@ public class LC3 {
 		adderConnections[0].powerOn();
 		
 		//Create the PC, connected to the junctions, and the incrementer, whose Summand A is the PC.
-		GatedRegister programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
+		programCounter = new GatedRegister(junctionOutputs, myStateMachine.getPCLoad());
 		RippleAdder counterIncrement = new RippleAdder(programCounter.getOutputConnections(), adderConnections);
 
 		//Connect the incrementer to the PC's intermediary junctions.
@@ -116,23 +121,16 @@ public class LC3 {
 		RegisterFile myRegisterFile = new RegisterFile(myStateMachine.getDRSelects(), myStateMachine.getSR1Selects(),
 				myStateMachine.getSR2Selects(), myStateMachine.getREGLoad(), WORD_SIZE);
 		
+		/*
+		 * Setup Input B
+		 */
 		Extender imm5Extender = new Extender(myStateMachine.getImm5Lines(), WORD_SIZE, false);
 		//Apparently at some point the registers needed to be flipped.
-		Connection[] extenderReversed = new Connection[WORD_SIZE];
-		for (int i = 0; i < WORD_SIZE; i++) {
-			extenderReversed[i] = imm5Extender.getOutputs()[WORD_SIZE - (i + 1)];
-		}
+		Reverser imm5Reverser = new Reverser(imm5Extender.getOutputs());
+		MultiplexerArray inputBMux = new MultiplexerArray(myRegisterFile.getSR2Outputs(), imm5Reverser.getOutputs(),
+				myStateMachine.getImmediateSelect());
 		
-		Multiplexer[] inputBMuxes = new Multiplexer[WORD_SIZE];
-		Connection[] inputBLines = new Connection[WORD_SIZE];
-		for (int i = 0; i < WORD_SIZE; i++) {
-			Connection[] muxInputs = {myRegisterFile.getSR2Outputs()[i], extenderReversed[i]};
-			Connection[] selectLine = {myStateMachine.getImmediateSelect()};
-			inputBMuxes[i] = new Multiplexer(muxInputs, selectLine);
-			inputBLines[i] = inputBMuxes[i].getOutput();
-		}
-		
-		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), inputBLines, myStateMachine.getALUK());
+		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), inputBMux.getOutputs(), myStateMachine.getALUK());
 		//GateALU contains the last ALU output and connects it to the bus.
 		GatedRegister gateALU = new GatedRegister(alu.getOutputs(), myStateMachine.getALULoad());
 		myBus.setGateALUOutputs(gateALU.getOutputConnections());
@@ -145,6 +143,17 @@ public class LC3 {
 		
 		//TEST OUTPUT
 		myOutputConnections = myRegisterFile.getOutputConnections();
+	}
+	
+	private void setupAddressAdder() {
+		//ADDR1MUX
+		//For now, PC only
+		
+		//ADDR2MUX
+		//For now, PCoffset9 only
+		Extender pcOffset9Extender = new Extender(myStateMachine.getPCOffset9Lines(), WORD_SIZE, false);
+		Extender pcExtender = new Extender(this.programCounter.getOutputConnections(), WORD_SIZE, true);
+		RippleAdder addressAdder = new RippleAdder(pcExtender.getOutputs(), pcOffset9Extender.getOutputs());
 	}
 	
 	/**

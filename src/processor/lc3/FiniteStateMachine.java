@@ -40,6 +40,7 @@ public class FiniteStateMachine {
 	private Connection[] myDRSelects;
 	private Connection[] myConditionSelects;
 	private Connection[] mySR1Selects;
+	private Connection[] myPCOffset9Selects;
 	private Connection myImmediateSelect;
 	private Connection[] mySR2Selects;
 	private Connection[] myImm5Selects;
@@ -141,6 +142,18 @@ public class FiniteStateMachine {
 			sr1Gates[j] = new AndGate(instructionOutputs[i], sr1EnableGate.getOutput());
 			mySR1Selects[j] = sr1Gates[j].getOutput();
 		}
+		//PCoffset9
+		//8-0 / 7-16
+		//BR, LD, LDI, LEA, ST, STI
+		AndGate[] pcOffset9Gates = new AndGate[9];
+		Connection[] pcOffset9EnableLines = {getInstrSelect(OPCODE_BR), getInstrSelect(OPCODE_LD), getInstrSelect(OPCODE_LDI), 
+				getInstrSelect(OPCODE_LEA), getInstrSelect(OPCODE_ST), getInstrSelect(OPCODE_STI)};
+		OrGate pcOffset9EnableGate = new OrGate(sr1EnableLines);
+		myPCOffset9Selects = new Connection[9];
+		for(int i = 7, j = 0; i < 16; i++, j++) {
+			pcOffset9Gates[j] = new AndGate(instructionOutputs[i], pcOffset9EnableGate.getOutput());
+			myPCOffset9Selects[j] = pcOffset9Gates[j].getOutput();
+		}
 		//Immediate Flag
 		//5 / 10
 		//ADD, AND
@@ -214,6 +227,10 @@ public class FiniteStateMachine {
 		return mySR1Selects;
 	}
 	
+	public Connection[] gePCOffset9Selects() {
+		return myPCOffset9Selects;
+	}
+	
 	public Connection[] getSR2Selects() {
 		return mySR2Selects;
 	}
@@ -228,6 +245,10 @@ public class FiniteStateMachine {
 	
 	public Connection[] getImm5Lines() {
 		return myImm5Selects;
+	}
+	
+	public Connection[] getPCOffset9Lines() {
+		return myPCOffset9Selects;
 	}
 	
 	
