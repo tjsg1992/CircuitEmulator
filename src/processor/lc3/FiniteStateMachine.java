@@ -5,6 +5,7 @@ import gate.NandGate;
 import gate.NotGate;
 import gate.OrGate;
 import transistor.Connection;
+import transistor.Junction;
 import circuit.clock.Clock;
 import circuit.clock.RippleCounter;
 import circuit.combinational.Decoder;
@@ -30,10 +31,11 @@ public class FiniteStateMachine {
 	private static final int OPCODE_TRAP = 15;
 	
 	private static final int PC_LOAD = 0;
-	private static final int MAR_LOAD = 1;
+	private static final int MAR_LOAD_FETCH = 1;
 	private static final int MDR_LOAD = 2;
 	private static final int IR_LOAD = 3;
 	private static final int ALU_LOAD = 4;
+	private static final int MAR_LOAD_EVAL = 5;
 	private Clock myClock;
 	private Connection[] myOutputs;
 	
@@ -49,9 +51,18 @@ public class FiniteStateMachine {
 	private Connection[] aluk;
 	
 	private Decoder instructionDecoder;
+	private Junction[] instructionDecoderJunctions;
 	
 	public FiniteStateMachine() {
 		setClock(new Clock());
+		
+		instructionDecoderJunctions = new Junction[4];
+		Connection[] junctionOutputs = new Connection[4];
+		for (int i = 0; i < 4; i++) {
+			instructionDecoderJunctions[i] = new Junction(new Connection());
+			junctionOutputs[i] = instructionDecoderJunctions[i].getOutput();
+		}
+		instructionDecoder = new Decoder(junctionOutputs);
 	}
 	
 	public void setClock(Clock theClock) {
@@ -74,13 +85,11 @@ public class FiniteStateMachine {
 	
 	public void setupInstructionHandler(Register instructionRegister) {
 		Connection[] instructionOutputs = instructionRegister.getOutputConnections();
-		
-		Connection[] decoderInputs = new Connection[4];
 		for(int i = 0; i < 4; i++) {
-			decoderInputs[i] = instructionOutputs[i];
+			instructionDecoderJunctions[i].setInput(instructionOutputs[i]);
+			instructionOutputs[i].connectOutputTo(instructionDecoderJunctions[i]);
 		}
 		
-		instructionDecoder = new Decoder(decoderInputs);		
 		Connection[] aluOuts = {getInstrSelect(OPCODE_ADD), getInstrSelect(OPCODE_AND), getInstrSelect(OPCODE_NOT)};
 		OrGate aluInstrGate = new OrGate(aluOuts);
 		AndGate regLoadGate = new AndGate(aluInstrGate.getOutput(), myOutputs[5]);
@@ -191,8 +200,14 @@ public class FiniteStateMachine {
 		return myOutputs[PC_LOAD];
 	}
 	
-	public Connection getMARLoad() {
-		return myOutputs[MAR_LOAD];
+	public Connection getMARLoadFetch() {
+		return myOutputs[MAR_LOAD_FETCH];
+	}
+	
+	public Connection getMARLoadEval() {
+		Connection[] marEvalLines = {myOutputs[MAR_LOAD_EVAL], getInstrSelect(OPCODE_LD)};
+		AndGate marEvalGate = new AndGate(marEvalLines);
+		return marEvalGate.getOutput();
 	}
 	
 	public Connection getMDRLoad() {
@@ -257,7 +272,7 @@ public class FiniteStateMachine {
 	}
 	
 	public Connection getPCGate() {
-		return getMARLoad();
+		return getMARLoadFetch();
 	}
 	
 	public Connection getMDRGate() {
@@ -266,6 +281,10 @@ public class FiniteStateMachine {
 
 	public Connection getALUGate() {
 		return getREGLoad();
+	}
+
+	public Connection getMarMuxGate() {
+		return getMARLoadEval();
 	}
 
 	

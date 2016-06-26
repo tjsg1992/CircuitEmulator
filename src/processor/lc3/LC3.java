@@ -31,6 +31,7 @@ public class LC3 {
 	private ProcessorBus myBus;	
 	private GatedRegister programCounter;
 	private Connection[] myOutputConnections; //TEST OUTPUT
+	private Junction marJunction;
 	
 	/**
 	 * Construct a LC3 processor.
@@ -57,7 +58,8 @@ public class LC3 {
 	 */
 	private void setupMemory() {		
 		//The MAR stores the next instruction address from the bus.
-		Register memoryAddressRegister = new Register(myBus.getOutputs(), myStateMachine.getMARLoad());
+		marJunction = new Junction(myStateMachine.getMARLoadFetch());
+		Register memoryAddressRegister = new Register(myBus.getOutputs(), marJunction.getOutput());
 		
 		//Create the memory inputs for our Memory along with its write line.
 		Connection[] memoryInputs = new Connection[WORD_SIZE];
@@ -72,7 +74,7 @@ public class LC3 {
 		
 		//The MDR stores the instruction located at the memory address stored in the MAR. Linked to the bus.
 		Register memoryDataRegister = 
-				new Register(memory.getOutputConnections(), myStateMachine.getMDRLoad());		
+				new Register(memory.getOutputConnections(), myStateMachine.getMDRLoad());
 		myBus.addInput(memoryDataRegister.getOutputConnections(), myStateMachine.getMDRGate());
 		
 		//Connect a MemoryLoader to the Memory that loads it with assembly code from a .txt file.
@@ -147,8 +149,7 @@ public class LC3 {
 		}
 		
 		//TEST OUTPUT
-		myOutputConnections = myRegisterFile.getOutputConnections();
-		
+		myOutputConnections = myRegisterFile.getOutputConnections();		
 	}
 	
 	private void setupAddressAdder() {
@@ -160,6 +161,17 @@ public class LC3 {
 		Extender pcOffset9Extender = new Extender(myStateMachine.getPCOffset9Lines(), WORD_SIZE, false);
 		Extender pcExtender = new Extender(this.programCounter.getOutputConnections(), WORD_SIZE, true);
 		RippleAdder addressAdder = new RippleAdder(pcExtender.getOutputs(), pcOffset9Extender.getOutputs());
+		
+		//TODO: MARMux should be linked to the bus, not addressAdder.
+		Multiplexer marMux;
+		
+		myBus.addInput(addressAdder.getOutputSums(), myStateMachine.getMarMuxGate());
+		
+		//Add MARLoad Evaluate Address line to the pre-existing MAR Junction.
+		//Do so now due to the instruction register needing to be set-up first.
+		Connection[] marJunctionLines = {myStateMachine.getMARLoadFetch(), myStateMachine.getMARLoadEval()};
+		marJunction.setInputs(marJunctionLines);
+		myStateMachine.getMARLoadEval().connectOutputTo(marJunction);
 	}
 	
 	/**
