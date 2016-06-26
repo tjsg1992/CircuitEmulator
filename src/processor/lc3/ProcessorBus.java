@@ -1,5 +1,12 @@
 package processor.lc3;
 
+import gate.OrGate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import main.CircuitBuilder;
+import circuit.combinational.TristateBuffer;
 import transistor.Connection;
 
 /**
@@ -10,36 +17,52 @@ import transistor.Connection;
  *
  */
 public class ProcessorBus {
+	private Connection[] myOutputs;
+	private int mySize;
+	private List<Connection[]> myInputSets;
 	
-	private Connection[] myGatePCOutputs;
-	private Connection[] myGateMDROutputs;
-	private Connection[] myGateALUOutputs;
+	public ProcessorBus(int theSize) {
+		this.mySize = theSize;
+		this.myInputSets = new ArrayList<Connection[]>();
+		
+		this.myOutputs = new Connection[this.mySize];
+		for (int i = 0; i < this.mySize; i++) {
+			this.myOutputs[i] = new Connection();
+		}	
+	}
 	
-	public ProcessorBus() {
-		//Empty constructor, as the class is just a collection of setter and getter methods.
+	public void addInput(Connection[] theInput, Connection selectLine) {
+		if (theInput.length != this.mySize) {
+			throw new IllegalArgumentException("Input of width " + theInput.length + " added to processor bus. "
+					+ "Width of " + this.mySize + " expected.");
+		}
+		
+		TristateBuffer inputBuffer = new TristateBuffer(theInput, selectLine);
+		this.myInputSets.add(inputBuffer.getOutputs());
+		
+		OrGate[] columnGates = new OrGate[this.mySize];
+		
+		if (this.myInputSets.size() == 1) {
+			this.myOutputs = this.myInputSets.get(0);
+		} else {
+			for (int i = 0; i < this.mySize; i++) {
+				Connection[] gateInputs = new Connection[this.myInputSets.size()];
+				for (int j = 0; j < this.myInputSets.size(); j++) {
+					gateInputs[j] = this.myInputSets.get(j)[i];			
+				}				
+				columnGates[i] = new OrGate(gateInputs);
+				this.myOutputs[i] = columnGates[i].getOutput();
+			}
+		}
+		
+		
 	}
-
-	public Connection[] getGatePCOutputs() {
-		return myGatePCOutputs;
+	
+	public Connection[] getOutputs() {
+		return this.myOutputs;
 	}
-
-	public void setGatePCOutputs(Connection[] theGatePCOutputs) {
-		this.myGatePCOutputs = theGatePCOutputs;
-	}
-
-	public Connection[] getGateMDROutputs() {
-		return myGateMDROutputs;
-	}
-
-	public void setGateMDROutputs(Connection[] theGateMDROutputs) {
-		this.myGateMDROutputs = theGateMDROutputs;
-	}
-
-	public Connection[] getGateALUOutputs() {
-		return myGateALUOutputs;
-	}
-
-	public void setGateALUOutputs(Connection[] theGateALUOutputs) {
-		this.myGateALUOutputs = theGateALUOutputs;
+	
+	public List<Connection[]> testGetInputs() {
+		return this.myInputSets;
 	}
 }

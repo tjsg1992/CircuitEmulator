@@ -1,5 +1,8 @@
 package processor.lc3;
 
+import java.util.Arrays;
+
+import main.CircuitBuilder;
 import main.MemoryLoader;
 import transistor.Connection;
 import transistor.Junction;
@@ -33,14 +36,14 @@ public class LC3 {
 	 * Construct a LC3 processor.
 	 */
 	public LC3() {
-		myBus = new ProcessorBus();
+		myBus = new ProcessorBus(WORD_SIZE);
 		myStateMachine = new FiniteStateMachine();
 		
 		setupProgramCounter();
 		setupMemory();		
 		Register instructionRegister =
-				new Register(myBus.getGateMDROutputs(), myStateMachine.getIRLoad());
-		myStateMachine.setupInstructionHandler(instructionRegister);		
+				new Register(myBus.getOutputs(), myStateMachine.getIRLoad());
+		myStateMachine.setupInstructionHandler(instructionRegister);
 		setupProcessingUnit();
 		setupAddressAdder();
 		
@@ -54,7 +57,7 @@ public class LC3 {
 	 */
 	private void setupMemory() {		
 		//The MAR stores the next instruction address from the bus.
-		Register memoryAddressRegister = new Register(myBus.getGatePCOutputs(), myStateMachine.getMARLoad());
+		Register memoryAddressRegister = new Register(myBus.getOutputs(), myStateMachine.getMARLoad());
 		
 		//Create the memory inputs for our Memory along with its write line.
 		Connection[] memoryInputs = new Connection[WORD_SIZE];
@@ -65,12 +68,12 @@ public class LC3 {
 		
 		//Create the memory. Memory inputs will later be connected to the Memory Loader, and is indexed by the MAR.
 		MemoryArray memory = new MemoryArray(memoryInputs,
-				memoryAddressRegister.getOutputConnections(), memoryWE);
+				Arrays.copyOfRange(memoryAddressRegister.getOutputConnections(), 0, MEMORY_SIZE), memoryWE);
 		
 		//The MDR stores the instruction located at the memory address stored in the MAR. Linked to the bus.
-		GatedRegister memoryDataRegister = 
-				new GatedRegister(memory.getOutputConnections(), myStateMachine.getMDRLoad());		
-		myBus.setGateMDROutputs(memoryDataRegister.getOutputConnections());
+		Register memoryDataRegister = 
+				new Register(memory.getOutputConnections(), myStateMachine.getMDRLoad());		
+		myBus.addInput(memoryDataRegister.getOutputConnections(), myStateMachine.getMDRGate());
 		
 		//Connect a MemoryLoader to the Memory that loads it with assembly code from a .txt file.
 		MemoryLoader loader = new MemoryLoader(memoryInputs,
@@ -110,8 +113,10 @@ public class LC3 {
 		}
 
 		//GatePC is loaded with the current PC value and connected to the bus.
-		GatedRegister gatePC = new GatedRegister(programCounter.getOutputConnections(), myStateMachine.getPCLoad());
-		myBus.setGatePCOutputs(gatePC.getOutputConnections());
+		Reverser r1 = new Reverser(programCounter.getOutputConnections());
+		Extender e = new Extender(r1.getOutputs(), WORD_SIZE, true);
+		Reverser r2 = new Reverser(e.getOutputs());
+		myBus.addInput(r2.getOutputs(), myStateMachine.getPCGate());
 	}
 	
 	/*
@@ -131,18 +136,19 @@ public class LC3 {
 				myStateMachine.getImmediateSelect());
 		
 		ALU alu = new ALU(myRegisterFile.getSR1Outputs(), inputBMux.getOutputs(), myStateMachine.getALUK());
-		//GateALU contains the last ALU output and connects it to the bus.
 		GatedRegister gateALU = new GatedRegister(alu.getOutputs(), myStateMachine.getALULoad());
-		myBus.setGateALUOutputs(gateALU.getOutputConnections());
+		
+		myBus.addInput(gateALU.getOutputConnections(), myStateMachine.getALUGate());
 		
 		//Connect the Register File inputs to the GateALU outputs from the bus.
 		for(int i = 0; i < 16; i++) {
-			myRegisterFile.getRegisterInputs()[i].setInput(myBus.getGateALUOutputs()[i]);
-			myBus.getGateALUOutputs()[i].connectOutputTo(myRegisterFile.getRegisterInputs()[i]);
+			myRegisterFile.getRegisterInputs()[i].setInput(myBus.getOutputs()[i]);
+			myBus.getOutputs()[i].connectOutputTo(myRegisterFile.getRegisterInputs()[i]);
 		}
 		
 		//TEST OUTPUT
 		myOutputConnections = myRegisterFile.getOutputConnections();
+		
 	}
 	
 	private void setupAddressAdder() {

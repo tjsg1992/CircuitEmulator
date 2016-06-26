@@ -1,5 +1,7 @@
 package main;
 
+import java.util.List;
+
 import processor.lc3.LC3;
 import transistor.Connection;
 
@@ -21,8 +23,8 @@ public class CircuitBuilder {
 		
 	}
 	
-	private static void printOutputs(Connection[] theOutputs) {
-		for(int i = 15; i >= 0; i--) {
+	public static void printOutputs(Connection[] theOutputs) {
+		for(int i = theOutputs.length - 1; i >= 0; i--) {
 			if(theOutputs[i].hasPower()) {
 				System.out.print("1");
 			} else {

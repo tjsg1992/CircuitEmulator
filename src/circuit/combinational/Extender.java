@@ -21,8 +21,8 @@ public class Extender {
 	 * @param zeroExtension False for sign extension; true for zero extension
 	 */
 	public Extender(Connection[] theInputLines, int theNewWidth, boolean zeroExtension) {
-		if (theInputLines.length >= theNewWidth) {
-			throw new IllegalArgumentException("Output width of extender must exceed input width.");
+		if (theInputLines.length > theNewWidth) {
+			throw new IllegalArgumentException("Output width of extender must exceed or equal input width.");
 		}
 		this.myInputs = theInputLines;
 		this.myOutputWidth = theNewWidth;

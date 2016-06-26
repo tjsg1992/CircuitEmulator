@@ -207,12 +207,12 @@ public class FiniteStateMachine {
 		return myOutputs[ALU_LOAD];
 	}
 	
-	public Connection[] getALUK() {
-		return aluk;
-	}
-	
 	public Connection getREGLoad() {
 		return myRegLoadConnection;
+	}
+	
+	public Connection[] getALUK() {
+		return aluk;
 	}
 	
 	public void start() {
@@ -255,5 +255,19 @@ public class FiniteStateMachine {
 	private Connection getInstrSelect(int opcode) {
 		return instructionDecoder.getOutputConnections()[opcode];
 	}
+	
+	public Connection getPCGate() {
+		return getMARLoad();
+	}
+	
+	public Connection getMDRGate() {
+		return getIRLoad();
+	}
+
+	public Connection getALUGate() {
+		return getREGLoad();
+	}
+
+	
 	
 }
